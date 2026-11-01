@@ -652,6 +652,57 @@ form .agree input {
 .doc li { margin: 0 0 6px; }
 .doc a { color: var(--violet); font-weight: 800; }
 .doc .updated { margin-top: 0; font-size: 13px; }
+
+.breadcrumb ol {
+  list-style: none;
+  margin: 0 0 10px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+.breadcrumb a {
+  color: var(--violet);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover { text-decoration: underline; }
+
+.breadcrumb li[aria-current="page"] {
+  color: var(--ink);
+}
+
+.breadcrumb li + li::before {
+  content: "›";
+  margin-right: 4px;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+.doc-cta {
+  margin-top: 24px;
+  padding: 16px 18px;
+  border-radius: 8px;
+  background: var(--peach);
+  border: 1px solid #dcc9ea;
+}
+
+.doc-cta p { margin: 0 0 10px; color: var(--ink); font-weight: 700; }
+
+.doc-cta .primary-link {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 6px;
+  background: linear-gradient(180deg, var(--yahoo-purple-light), var(--yahoo-purple));
+  color: #fff;
+  text-decoration: none;
+  font-weight: 800;
+}
 .empty { padding: 8px 4px 4px; }
 
 .error {

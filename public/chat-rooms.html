@@ -13,6 +13,12 @@
   <meta property="og:description" content="Free Yahoo Messenger-style public chat rooms in the browser. Guest chat, no download. Not affiliated with Yahoo." />
   <meta property="og:url" content="chat-rooms.html" />
   <meta property="og:image" content="og.png" />
+  <meta property="og:image:alt" content="Y-Chat free chat rooms in the browser" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Yahoo-Style Free Chat Rooms — Y-Chat" />
+  <meta name="twitter:description" content="Free public chat rooms in the browser. Guest chat, no download. Not affiliated with Yahoo." />
+  <meta name="twitter:image" content="og.png" />
   <link rel="stylesheet" href="styles.css" />
   <script src="site-meta.js"></script>
   <script src="analytics.js"></script>
@@ -24,6 +30,17 @@
       { "@type": "ListItem", "position": 1, "name": "Y-Chat", "item": "index.html" },
       { "@type": "ListItem", "position": 2, "name": "Chat rooms", "item": "chat-rooms.html" }
     ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Free chat rooms you join in the browser",
+    "description": "Guide to Y-Chat public chat rooms: categories, guest access, and how rooms work in the browser.",
+    "url": "chat-rooms.html",
+    "isPartOf": { "@type": "WebSite", "name": "Y-Chat", "url": "index.html" },
+    "dateModified": "2026-11-01"
   }
   </script>
 </head>
@@ -45,7 +62,12 @@
     </nav>
   </header>
   <main class="doc">
-    <p class="updated"><a href="index.html">Y-Chat</a> · Chat rooms</p>
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="index.html">Y-Chat</a></li>
+        <li aria-current="page">Chat rooms</li>
+      </ol>
+    </nav>
     <h1>Free chat rooms you join in the browser</h1>
     <p>A Y-Chat room is a public conversation. Whoever is in the room can read the lines while they are there. You do not download a chat app, and you do not need an account. Come in as a guest, pick a room, and talk.</p>
     <p>These rooms are the shared half of Y-Chat. The other half is a <a href="messenger.html">private messenger</a> for one person at a time. A line you type in a room is for the room. A line you type in the messenger is not posted there.</p>
@@ -105,7 +127,11 @@
     <h2>What the room does not keep</h2>
     <p>There is no chat history to search later, and no log you can email to yourself. Refresh the page and the lines disappear. You are placed back in the same room if it still exists, with an empty conversation, so you do not have to find the door again. A brief disconnect, where the page never actually reloaded, keeps the lines you were looking at and reconnects.</p>
     <p>That is the trade. A chat room here is easy to enter and impossible to scroll back through tomorrow. Say the thing to the people who are in the room now.</p>
-    <p><a href="index.html">Back to Y-Chat</a> · <a href="messenger.html">Private messenger</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></p>
+    <div class="doc-cta">
+      <p>Try the rooms live</p>
+      <a class="primary-link" href="index.html#gate-entry">Join free chat as a guest</a>
+    </div>
+    <p class="updated"><a href="index.html">Back to Y-Chat</a> · <a href="messenger.html">Private messenger</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></p>
   </main>
 </body>
 </html>

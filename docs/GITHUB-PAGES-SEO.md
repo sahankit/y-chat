@@ -17,6 +17,9 @@
 | Meta / OG / FAQ schema | OK | Home + guides; `site-meta.js` absolutizes URLs |
 | Mobile | OK | Viewport, responsive CSS |
 | Indexable gate content | OK | Long `.discover` + FAQ in static HTML |
+| `404.html` | OK | Helpful links, `noindex` |
+| Breadcrumbs + CTAs | OK | Guide/legal pages link back to join chat |
+| `WebPage` / `Organization` schema | OK | Guides, terms, privacy, home |
 
 ## You do in Search Console (manual)
 
@@ -25,6 +28,22 @@
 3. **Sitemaps** → add: `sitemap.xml` (or full URL above)
 4. **URL inspection** → test `https://sahankit.github.io/y-chat/index.html` → **Request indexing** (once)
 5. After 3–7 days: **Performance** / **Pages** for impressions and queries
+
+### Fix: “Sitemap could not be read”
+
+The live file is valid XML (open [sitemap.xml](https://sahankit.github.io/y-chat/sitemap.xml) in your browser). Search Console often shows this once if the first fetch was too early or the wrong URL was used.
+
+1. In **Sitemaps**, delete the failed `/sitemap.xml` entry.
+2. Wait **5–10 minutes**.
+3. **Add sitemap** again — paste the **full** URL:
+   ```text
+   https://sahankit.github.io/y-chat/sitemap.xml
+   ```
+   (If the box only accepts a path, enter `sitemap.xml` — not `/sitemap.xml` at the site root.)
+4. Top bar **URL inspection** → same sitemap URL → confirm fetch is OK.
+5. Recheck **Sitemaps** in **24 hours** (status can lag).
+
+Property must stay **URL prefix** `https://sahankit.github.io/y-chat/`, not Domain `github.io`.
 
 ## Optional (not required for basics)
 

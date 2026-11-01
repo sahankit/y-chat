@@ -13,6 +13,12 @@
   <meta property="og:description" content="Send a private instant message while you are both online. Guests can message people. An account keeps buddies on this computer." />
   <meta property="og:url" content="messenger.html" />
   <meta property="og:image" content="og.png" />
+  <meta property="og:image:alt" content="Y-Chat private messenger in the browser" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Yahoo-Style Private Messenger — Y-Chat" />
+  <meta name="twitter:description" content="Private instant messages in the browser while you are both online. Guest chat supported." />
+  <meta name="twitter:image" content="og.png" />
   <link rel="stylesheet" href="styles.css" />
   <script src="site-meta.js"></script>
   <script src="analytics.js"></script>
@@ -24,6 +30,17 @@
       { "@type": "ListItem", "position": 1, "name": "Y-Chat", "item": "index.html" },
       { "@type": "ListItem", "position": 2, "name": "Private messenger", "item": "messenger.html" }
     ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "A private messenger next to the chat rooms",
+    "description": "How Y-Chat private IM works: one-to-one messages, buddy list, and guest messaging in the browser.",
+    "url": "messenger.html",
+    "isPartOf": { "@type": "WebSite", "name": "Y-Chat", "url": "index.html" },
+    "dateModified": "2026-11-01"
   }
   </script>
 </head>
@@ -45,7 +62,12 @@
     </nav>
   </header>
   <main class="doc">
-    <p class="updated"><a href="index.html">Y-Chat</a> · Private messenger</p>
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <ol>
+        <li><a href="index.html">Y-Chat</a></li>
+        <li aria-current="page">Private messenger</li>
+      </ol>
+    </nav>
     <h1>A private messenger next to the chat rooms</h1>
     <p>Y-Chat has two ways to talk. The <a href="chat-rooms.html">chat rooms</a> are public to the people inside them. The messenger is one person at a time. Open their name, type, and send. That instant message is not copied into the room.</p>
     <p>You use it in the browser. There is no separate messenger app, no phone number, and no contact upload. If the person is online under the nickname you chose, the message can reach them. If they are not, it cannot wait for them. Nothing is queued for later, because private chats are not saved.</p>
@@ -83,7 +105,11 @@
     <h2>What this messenger is not</h2>
     <p>It is not a phone messenger, and it does not send SMS. It does not keep an archive you can search next week. It does not run in the background after you close the tab. It is not affiliated with Yahoo, and it is not Yahoo Messenger. It is a private chat beside a set of public rooms, for as long as both people are here.</p>
     <p>Advertising, if it is turned on later, is kept off this conversation. The welcome page and the room list are the only places an ad slot exists. The messenger window and the Send button stay clear.</p>
-    <p><a href="index.html">Back to Y-Chat</a> · <a href="chat-rooms.html">Chat rooms</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></p>
+    <div class="doc-cta">
+      <p>Message someone online</p>
+      <a class="primary-link" href="index.html#gate-entry">Open Y-Chat and pick a nickname</a>
+    </div>
+    <p class="updated"><a href="index.html">Back to Y-Chat</a> · <a href="chat-rooms.html">Chat rooms</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></p>
   </main>
 </body>
 </html>
