@@ -680,6 +680,11 @@ form .agree input {
   text-transform: uppercase;
 }
 
+.ad-slot-guide {
+  width: min(640px, calc(100% - 32px));
+  margin: 24px auto;
+}
+
 .doc {
   width: min(640px, calc(100% - 32px));
   margin: 32px auto;
