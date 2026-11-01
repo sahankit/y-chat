@@ -218,13 +218,13 @@
           <span class="word" aria-hidden="true">Chat</span>
           <span class="sr-only">Y-Chat — Yahoo-style free chat rooms and messenger</span>
         </h1>
-        <p class="gate-sub">Classic chat rooms &amp; instant messenger</p>
+        <p class="gate-sub">Chat rooms &amp; private messages — right in your browser</p>
       </header>
-      <p class="tagline">Pick a nickname, join a public room, or open a private message—just like the old Yahoo days. No app to install.</p>
-      <p id="server-pill" class="pill">Checking the server…</p>
+      <p class="tagline">Choose a nickname, walk into a room, and say hi. No download, no fuss — guest chat is the fastest way in.</p>
+      <p id="server-pill" class="pill">Connecting to chat…</p>
       <div id="legal-gate">
         <div class="legal-summary" role="note" aria-labelledby="legal-summary-title">
-          <p id="legal-summary-title" class="legal-summary-title">Terms, age, and open chat</p>
+          <p id="legal-summary-title" class="legal-summary-title">Before you jump in</p>
           <p>Y-Chat is a free <strong>18+</strong> open public chat service. Room messages are visible to people in that room; the relay does not keep a permanent chat log. Use caution with strangers—do not share passwords, financial details, or other sensitive information in public rooms.</p>
           <ul class="legal-points">
             <li>You must be at least <strong>18</strong> (or the age of majority where you live).</li>
@@ -237,12 +237,17 @@
             <input id="legal-check" type="checkbox" required />
             <span>I confirm I am 18 or older and I agree to the <a href="terms.html" target="_blank" rel="noopener">Terms &amp; Conditions</a> (including the Open Chat Policy) and <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>.</span>
           </label>
-          <button id="legal-accept" class="primary wide" type="submit" disabled>Accept and continue</button>
+          <button id="legal-accept" class="primary wide" type="submit" disabled>Got it — continue</button>
         </form>
         <p class="hint">This browser asks once per policy version. Clearing site data will ask again.</p>
       </div>
 
       <div id="gate-entry">
+      <ol class="welcome-steps" aria-label="How to start">
+        <li>Pick a nickname (guest is fine)</li>
+        <li>Choose a chat room</li>
+        <li>Say hello — or message someone privately</li>
+      </ol>
       <div class="gate-tabs" role="tablist">
         <button type="button" class="on" data-gate="guest" role="tab" aria-selected="true">Guest</button>
         <button type="button" data-gate="login" role="tab" aria-selected="false">Sign in</button>
@@ -251,9 +256,9 @@
 
       <form id="form-guest">
         <label for="guest-nick">Nickname</label>
-        <input id="guest-nick" name="nick" maxlength="16" autocomplete="nickname" placeholder="coolcat" required />
+        <input id="guest-nick" name="nick" maxlength="16" autocomplete="nickname" placeholder="e.g. StarGazer" required />
         <p class="hint">Letters, numbers, and underscores. 2–16 characters. No password needed.</p>
-        <button class="primary wide" type="submit" aria-label="Join chat as guest">Come on in</button>
+        <button class="primary wide" type="submit" aria-label="Join chat as guest">Let's chat</button>
       </form>
 
       <form id="form-login" hidden>
@@ -380,16 +385,16 @@
           <option value="away">Away</option>
           <option value="busy">Busy</option>
         </select>
-        <input id="status-message" maxlength="60" placeholder="Status message" aria-label="Status message" />
-        <label class="sound"><input type="checkbox" id="sound" checked /> Sounds</label>
-        <button type="button" id="sign-out" class="ghost">Sign out</button>
+        <input id="status-message" maxlength="60" placeholder="What's up? (optional)" aria-label="Status message" />
+        <label class="sound"><input type="checkbox" id="sound" checked /> Message sounds</label>
+        <button type="button" id="sign-out" class="ghost">Leave chat</button>
       </div>
     </header>
     <div class="body">
       <nav id="cats" class="panel cats" aria-label="Categories"></nav>
       <div id="stage" class="panel stage" role="region" aria-label="Chat"></div>
       <aside class="panel messenger">
-        <div class="panel-h">People</div>
+        <div class="panel-h">Who's here</div>
         <div class="msg-tabs">
           <button type="button" data-action="people-tab" data-tab="online">Online</button>
           <button type="button" data-action="people-tab" data-tab="buddies">Buddies</button>
@@ -410,7 +415,7 @@
   </div>
 
   <div id="dock" aria-live="polite"></div>
-  <p id="reconnect" class="reconnect" hidden>Connection dropped. This chat stays in the tab while we reconnect.</p>
+  <p id="reconnect" class="reconnect" hidden>Hang on — reconnecting. Your tab stays open.</p>
   <div id="toasts" aria-live="polite"></div>
   <script src="profile.js"></script>
   <script src="app.js"></script>

@@ -691,7 +691,7 @@ function applyRooms(rooms) {
 function renderCats() {
   const nav = $("cats");
   const cats = ["All", ...state.categories];
-  nav.replaceChildren(el("div", { class: "panel-h" }, "Browse"));
+  nav.replaceChildren(el("div", { class: "panel-h" }, "Pick a category"));
   for (const cat of cats) {
     const count = cat === "All"
       ? state.rooms.length
@@ -779,11 +779,11 @@ function renderLobby(force) {
   stage.replaceChildren(...[
     adBox("rooms"),
     el("div", { class: "lobby-intro" },
-      el("h2", {}, `Hey ${state.me.nick}`),
-      el("p", {}, "Pick a room and say hello. Tap a person when you'd rather talk just the two of you."),
-      el("p", { class: "fine" }, "Rooms you start live until this server restarts. Seeded rooms come back when it does.")),
+      el("h2", {}, `Welcome, ${state.me.nick}!`),
+      el("p", {}, "Tap a room to join the conversation. Want a private chat? Open someone from Who's here."),
+      el("p", { class: "fine" }, "Rooms you create stay until the server restarts — the built-in rooms always come back.")),
     el("div", { class: "lobby-tools" },
-      el("button", { type: "button", class: "primary", "data-action": "toggle-create" }, "Start a room")),
+      el("button", { type: "button", class: "primary", "data-action": "toggle-create" }, "+ New room")),
     el("form", { id: "create-form", hidden: "" },
       el("label", { for: "room-name" }, "Room name"),
       el("input", { id: "room-name", maxlength: "32", placeholder: "Night owls" }),
@@ -792,7 +792,7 @@ function renderLobby(force) {
       el("label", { for: "room-topic" }, "Topic"),
       el("input", { id: "room-topic", maxlength: "80", placeholder: "What is this room about?" }),
       el("div", { class: "row" },
-        el("button", { type: "submit", class: "primary" }, "Open the room"))),
+        el("button", { type: "submit", class: "primary" }, "Create & join"))),
     el("div", { id: "room-list", class: "room-list" }),
   ].filter(Boolean));
   $("create-form").addEventListener("submit", (event) => {
@@ -818,7 +818,7 @@ function renderRoomList() {
   host.replaceChildren();
   const rooms = state.rooms.filter((room) => state.category === "All" || room.category === state.category);
   if (!rooms.length) {
-    host.append(el("p", { class: "empty" }, "No rooms in this corner yet. Start one and invite someone in."));
+    host.append(el("p", { class: "empty" }, "Nothing here yet — be the first to start a room!"));
     return;
   }
   const groups = state.category === "All" ? state.categories : [state.category];
@@ -843,7 +843,7 @@ function roomButton(room) {
   el("span", { class: "room-copy" },
     el("span", { class: "room-top" },
       el("span", { class: "room-name" }, room.name),
-      el("span", { class: room.count ? "count hot" : "count" }, room.count ? `${room.count} here` : "quiet")),
+      el("span", { class: room.count ? "count hot" : "count" }, room.count ? `${room.count} chatting` : "be first")),
     el("span", { class: "topic" }, room.topic)));
 }
 
@@ -920,7 +920,7 @@ function enterRoom(msg) {
         title: token,
       }, EMOTE_MAP[token.toLowerCase()] || token))),
       el("div", { class: "composer-row" },
-        el("input", { id: "say", maxlength: "500", placeholder: "Say hello…", autocomplete: "off" }),
+        el("input", { id: "say", maxlength: "500", placeholder: "Type a message…", autocomplete: "off" }),
         el("button", { class: "primary", type: "submit" }, "Send")))));
   const log = $("transcript");
   for (const message of state.roomLog) log.append(lineEl(message));
@@ -964,7 +964,7 @@ function setPane(pane) {
     return;
   }
   if (pane === "chat" && state.view !== "room") {
-    toast("Pick a room first.");
+    toast("Choose a room first — then open the Chat tab.");
     pane = "rooms";
   }
   applyPane(pane);
@@ -1568,7 +1568,7 @@ function markRelayPill(ok, mode) {
   pill.classList.toggle("ok", ok);
   pill.classList.toggle("bad", !ok);
   if (ok) {
-    pill.textContent = "Chat relay is reachable";
+    pill.textContent = "You're good to go — server is ready";
     return;
   }
   const loopback = location.hostname === "localhost" || location.hostname === "127.0.0.1";
@@ -1582,9 +1582,9 @@ function markRelayPill(ok, mode) {
     pill.textContent = "Relay health OK but chat connection failed";
     return;
   }
-  pill.textContent = loopback
-    ? "Chat relay is not running — run npm start in the project folder"
-    : "Chat relay is not reachable — set wsUrl in config.json";
+    pill.textContent = loopback
+      ? "Server offline — run npm start in the project folder"
+      : "Can't reach chat server — check config.json";
 }
 
 function probeRelaySocket(timeoutMs = 6000) {
