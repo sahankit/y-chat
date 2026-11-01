@@ -21,13 +21,24 @@
 | Breadcrumbs + CTAs | OK | Guide/legal pages link back to join chat |
 | `WebPage` / `Organization` schema | OK | Guides, terms, privacy, home |
 
-## You do in Search Console (manual)
+## Search engines (manual dashboards)
+
+**Sitemap URL (both):** `https://sahankit.github.io/y-chat/sitemap.xml`
+
+### Google Search Console
 
 1. **Property:** URL prefix → `https://sahankit.github.io/y-chat/`
-2. **Verify:** HTML file method → [verification URL](https://sahankit.github.io/y-chat/google34da527c15058477.html)
-3. **Sitemaps** → add: `sitemap.xml` (or full URL above)
-4. **URL inspection** → test `https://sahankit.github.io/y-chat/index.html` → **Request indexing** (once)
-5. After 3–7 days: **Performance** / **Pages** for impressions and queries
+2. **Verify:** HTML file → [google34da527c15058477.html](https://sahankit.github.io/y-chat/google34da527c15058477.html)
+3. **Sitemaps** → submit full sitemap URL above
+4. **URL inspection** → `index.html` → **Request indexing** (once per key page)
+5. After 3–7 days: **Performance** / **Pages**
+
+### Bing Webmaster Tools
+
+1. Site: `https://sahankit.github.io/y-chat/` (verify if not already)
+2. **Sitemaps** → same URL as Google
+3. Optional: **URL Submission** → home + guide pages (Bing allows batch submit)
+4. After a few days: **Site Explorer** / **Search Performance**
 
 ### Fix: “Sitemap could not be read”
 
@@ -49,7 +60,6 @@ Property must stay **URL prefix** `https://sahankit.github.io/y-chat/`, not Doma
 
 | Item | Why |
 |------|-----|
-| [Bing Webmaster Tools](https://www.bing.com/webmasters) | Extra search engine; import from GSC |
 | GitHub repo **About** + **Topics** | `chat`, `websocket`, `github-pages` — helps GitHub discovery |
 | Analytics (GA) after consent | `public/analytics.json` + measurement ID — tracks landing, not room text |
 | AdSense | Separate approval; see terms / 18+ gate |
