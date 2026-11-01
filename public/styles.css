@@ -671,6 +671,23 @@ form .agree input {
   box-shadow: var(--shadow);
 }
 
+.ad-slot-welcome {
+  width: 100%;
+  margin: 16px 0 4px;
+}
+
+.ad-slot-discover {
+  width: 100%;
+  margin: 20px 0 8px;
+}
+
+.stage .ad-slot {
+  width: 100%;
+  max-width: none;
+  margin: 16px 14px 20px;
+  box-sizing: border-box;
+}
+
 .ad-label {
   margin: 0 0 6px;
   color: var(--muted);

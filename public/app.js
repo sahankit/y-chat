@@ -743,6 +743,7 @@ function ensureAdsScript(client) {
 function fillAd(host, name) {
   const slot = adSlotId(name);
   if (!host || !state.ads || !slot) return false;
+  if (host.dataset.ychatAdSlot === slot && host.querySelector("ins.adsbygoogle")) return true;
   const ins = el("ins", {
     class: "adsbygoogle",
     style: "display:block",
@@ -751,6 +752,7 @@ function fillAd(host, name) {
     "data-ad-format": "auto",
     "data-full-width-responsive": "true",
   });
+  host.dataset.ychatAdSlot = slot;
   host.replaceChildren(el("p", { class: "ad-label" }, "Advertisement"), ins);
   host.hidden = false;
   ensureAdsScript(state.ads.client).then(() => {
@@ -775,6 +777,7 @@ function setupAds() {
         if (!cfg || !/^ca-pub-\d+$/.test(String(cfg.client || ""))) return;
         state.ads = { client: cfg.client, slots: cfg.slots || {} };
         fillAd($("ad-welcome"), "welcome");
+        fillAd($("ad-discover"), "welcome");
       })
       .catch(() => {});
   };
@@ -791,7 +794,6 @@ function renderLobby(force) {
   state.view = "lobby";
   stage.dataset.mode = "lobby";
   stage.replaceChildren(...[
-    adBox("rooms"),
     el("div", { class: "lobby-intro" },
       el("h2", {}, `Welcome, ${state.me.nick}!`),
       el("p", {}, "Tap a room to join the conversation. Want a private chat? Open someone from Who's here."),
@@ -808,6 +810,7 @@ function renderLobby(force) {
       el("div", { class: "row" },
         el("button", { type: "submit", class: "primary" }, "Create & join"))),
     el("div", { id: "room-list", class: "room-list" }),
+    adBox("rooms"),
   ].filter(Boolean));
   $("create-form").addEventListener("submit", (event) => {
     event.preventDefault();

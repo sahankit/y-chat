@@ -24,6 +24,8 @@
 
   function fillHost(host, client, slot) {
     if (!host || !client || !slot) return;
+    if (host.dataset.ychatAdSlot === slot && host.querySelector("ins.adsbygoogle")) return;
+    host.dataset.ychatAdSlot = slot;
     host.replaceChildren();
     const label = document.createElement("p");
     label.className = "ad-label";
@@ -55,7 +57,7 @@
         if (!cfg || !/^ca-pub-\d+$/.test(String(cfg.client || ""))) return;
         const slot = pickSlot(cfg.slots, ["guide", "display", "welcome"]);
         if (!slot) return;
-        for (const id of ["ad-guide", "ad-guide-bottom"]) {
+        for (const id of ["ad-guide-top", "ad-guide", "ad-guide-bottom"]) {
           fillHost(document.getElementById(id), cfg.client, slot);
         }
       })
