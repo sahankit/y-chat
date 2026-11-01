@@ -1,5 +1,6 @@
 {
   "client": "ca-pub-5596933121293455",
+  "autoAds": true,
   "slots": {
     "display": "8781580862",
     "welcome": "8781580862",

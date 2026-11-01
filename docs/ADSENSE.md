@@ -70,9 +70,13 @@ In AdSense → **Ads** → **Auto ads** → turn **On** → **Apply to site**.
 
 The dashboard shows a `<script async src="…adsbygoogle.js?client=ca-pub-…">` snippet. **Do not paste that into raw HTML** on Y-Chat: ads must load only after the 18+ Terms accept (Privacy Policy).
 
-This repo already injects the **same script** via **`ads-loader.js`** when the user has accepted Terms (or on return visits with consent saved). Your publisher ID lives in **`public/ads.json`** (`ca-pub-5596933121293455`).
+This repo injects the **same script** via **`ads-bootstrap.js`** when the user has accepted Terms. It also enables **`enable_page_level_ads: true`** so **Google Auto ads** (anchor, vignette, in-page) can appear **automatically** — you do not paste the snippet into HTML.
 
-After deploy, accept Terms on https://sahankit.github.io/y-chat/ and wait up to an hour for Auto ads to appear. Optional **manual** units below add labeled slots in addition to Auto ads.
+On **return visits**, the publisher ID is cached so Auto ads can start in the `<head>` as early as possible (still only after Terms were accepted once).
+
+Your config lives in **`public/ads.json`** (`autoAds: true`, `ca-pub-5596933121293455`).
+
+**You must still:** AdSense → **Auto ads** → **ON** → **Apply to site**, and wait until **Sites** shows the property as **Ready** (not “Getting ready”). Google chooses **when** and **where** Auto ads show; labeled **Display** slots in the app are extra placements using your ad unit ID.
 
 ## 4. Manual display ad units (optional)
 
