@@ -1,6 +1,6 @@
 "use strict";
 
-/** Injects the AdSense / Auto ads script after the 18+ Terms gate (same snippet as AdSense dashboard). */
+/** AdSense + Auto ads after the 18+ Terms gate (same client as the AdSense dashboard snippet). */
 (() => {
   const LEGAL_KEY = "ychat-legal";
   const LEGAL_VERSION = "3";
@@ -14,10 +14,9 @@
   }
 
   function findAdSenseScript(client) {
-    const want = encodeURIComponent(client);
     for (const node of document.querySelectorAll('script[src*="adsbygoogle.js"]')) {
       const src = node.getAttribute("src") || "";
-      if (src.includes(want)) return node;
+      if (src.includes(client)) return node;
     }
     return null;
   }
@@ -35,23 +34,36 @@
     });
   }
 
-  let started = false;
+  function queueAutoAds(client) {
+    window.adsbygoogle = window.adsbygoogle || [];
+    window.adsbygoogle.push({
+      google_ad_client: client,
+      enable_page_level_ads: true,
+    });
+  }
+
+  let readyPromise = null;
 
   function startYchatAds() {
-    if (window.__ychatAdsClient) return injectAdSense(window.__ychatAdsClient);
-    if (started) return Promise.resolve();
-    started = true;
-    return fetch(new URL("ads.json", location.href).href)
+    if (window.__ychatAdsClient) {
+      queueAutoAds(window.__ychatAdsClient);
+      return injectAdSense(window.__ychatAdsClient);
+    }
+    if (readyPromise) return readyPromise;
+    readyPromise = fetch(new URL("ads.json", location.href).href)
       .then((res) => (res.ok ? res.json() : null))
       .then((cfg) => {
         const client = String((cfg && cfg.client) || "").trim();
         if (!/^ca-pub-\d+$/.test(client)) return;
         window.__ychatAdsClient = client;
+        queueAutoAds(client);
         return injectAdSense(client);
       })
       .catch(() => {});
+    return readyPromise;
   }
 
   window.startYchatAds = startYchatAds;
+  window.ychatAdsReady = startYchatAds;
   if (legalOk()) startYchatAds();
 })();

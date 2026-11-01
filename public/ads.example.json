@@ -2,6 +2,7 @@
   "client": "ca-pub-XXXXXXXXXXXXXXXX",
   "slots": {
     "welcome": "0000000000",
-    "rooms": "0000000000"
+    "rooms": "0000000000",
+    "display": "0000000000"
   }
 }

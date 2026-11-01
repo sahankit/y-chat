@@ -712,8 +712,13 @@ function renderCats() {
 let adsScript = null;
 
 function adSlotId(name) {
-  const id = state.ads && state.ads.slots && state.ads.slots[name];
-  return typeof id === "string" && /^\d+$/.test(id) ? id : "";
+  const slots = state.ads && state.ads.slots;
+  if (!slots) return "";
+  const direct = slots[name];
+  if (typeof direct === "string" && /^\d+$/.test(direct)) return direct;
+  const shared = slots.display || slots.shared;
+  if (typeof shared === "string" && /^\d+$/.test(shared)) return shared;
+  return "";
 }
 
 function ensureAdsScript(client) {
@@ -763,14 +768,18 @@ function adBox(name) {
 }
 
 function setupAds() {
-  fetch(new URL("ads.json", location.href).href)
-    .then((res) => (res.ok ? res.json() : null))
-    .then((cfg) => {
-      if (!cfg || !/^ca-pub-\d+$/.test(String(cfg.client || ""))) return;
-      state.ads = { client: cfg.client, slots: cfg.slots || {} };
-      fillAd($("ad-welcome"), "welcome");
-    })
-    .catch(() => {});
+  const mount = () => {
+    fetch(new URL("ads.json", location.href).href)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((cfg) => {
+        if (!cfg || !/^ca-pub-\d+$/.test(String(cfg.client || ""))) return;
+        state.ads = { client: cfg.client, slots: cfg.slots || {} };
+        fillAd($("ad-welcome"), "welcome");
+      })
+      .catch(() => {});
+  };
+  const ready = window.ychatAdsReady ? window.ychatAdsReady() : Promise.resolve();
+  ready.then(mount).catch(mount);
 }
 
 function renderLobby(force) {

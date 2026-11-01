@@ -152,5 +152,16 @@ Ads do **not** load until Terms are accepted (`app.js` → `setupAds()` after le
 |-------|-----|
 | Verify fails | Confirm `ads.json` `client` matches AdSense; meta visible in page source; wait for Pages deploy. |
 | ads.txt not found | File must be `public/ads.txt` → `…/y-chat/ads.txt` on live site. |
+| **Ads not showing at all** | See checklist below. |
 | “No fill” / blank slots | Normal on low traffic; wait; check slot IDs and approval status. |
 | Application rejected | Add clearer contact/about, stress moderation rules, more static content; avoid implying Yahoo affiliation in ad landing experience. |
+
+### Ads not showing — checklist
+
+1. **Accept Terms** on Y-Chat (ads never load before the 18+ checkbox).
+2. **AdSense site status** → **Sites** → `sahankit.github.io` must be **Ready** / approved (new sites often show **“Getting ready”** for days — no fill until then).
+3. **Auto ads** → turn **On** → **Apply to site** (anchor/vignette ads do not use `#ad-welcome`).
+4. **Manual boxes** (`Advertisement` on welcome / room list) need **numeric slot IDs** in `public/ads.json`. Empty `"welcome"` / `"rooms"` means those boxes stay hidden. Create **Display ad units** in AdSense and paste IDs, or set one `"display"` slot used for both.
+5. **Ad blocker** off (or test in Chrome incognito with extensions disabled).
+6. **DevTools** → Network: after accept, confirm `adsbygoogle.js?client=ca-pub-5596933121293455` loads. Console: `data-ad-status="unfilled"` on `<ins class="adsbygoogle">` usually means **Google has no ad to serve yet** (review, policy, or traffic) — not a broken script.
+7. Wait **24–48 hours** after first approval; Google’s own message says up to **one hour** per page, but new sites often take longer.
