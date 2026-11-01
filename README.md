@@ -11,6 +11,8 @@ Browser chat rooms and private messenger. The **UI is static**; a small **WebSoc
 
 After you push to `main`, enable **Settings → Pages → Build and deployment → GitHub Actions** once if the site is not live yet.
 
+**SEO (no custom domain):** `public/sitemap.xml` and `public/robots.txt` target this GitHub Pages URL. Submit the sitemap in [Google Search Console](https://search.google.com/search-console) — see **[docs/GITHUB-PAGES-SEO.md](docs/GITHUB-PAGES-SEO.md)**.
+
 ## Requirements
 
 - Node.js 18+

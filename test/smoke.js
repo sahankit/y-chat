@@ -74,8 +74,9 @@ async function main() {
   const map = await sitemap.text();
   assert(privacyText.includes("Privacy") && privacyText.includes("terms.html"), "privacy page incomplete");
   assert(termsText.includes("Terms") && termsText.includes("18") && termsText.includes("privacy.html"), "terms page incomplete");
-  assert(map.includes("/terms") && map.includes("/privacy"), "sitemap should list legal pages");
-  assert(map.includes("/chat-rooms") && map.includes("/messenger"), "sitemap should list the guides");
+  assert(map.includes("terms.html") && map.includes("privacy.html"), "sitemap should list legal pages");
+  assert(map.includes("chat-rooms.html") && map.includes("messenger.html"), "sitemap should list the guides");
+  assert(map.includes("sahankit.github.io/y-chat"), "sitemap should use GitHub Pages base URL");
   const roomsPage = await fetch(`${STATIC}/chat-rooms`);
   const messengerPage = await fetch(`${STATIC}/messenger`);
   assert(roomsPage.ok && messengerPage.ok, "guide pages should load");

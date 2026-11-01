@@ -13,15 +13,28 @@
     const value = node.getAttribute("content");
     if (value && !/^https?:\/\//i.test(value)) node.setAttribute("content", abs(value));
   });
-  const ld = document.querySelector('script[type="application/ld+json"]');
-  if (ld && ld.textContent.includes('"/"')) {
-    try {
-      const data = JSON.parse(ld.textContent);
-      if (data.url && !/^https?:\/\//i.test(data.url)) data.url = abs(data.url);
-      if (data.image && !/^https?:\/\//i.test(data.image)) data.image = abs(data.image);
-      ld.textContent = JSON.stringify(data);
-    } catch { /* ignore */ }
+  function absolutizeLd(value) {
+    if (typeof value === "string") {
+      if (/^https?:\/\//i.test(value)) return value;
+      if (value === "/" || value.startsWith("/")) return abs(value.replace(/^\//, "") || "index.html");
+      if (/\.html$/i.test(value)) return abs(value);
+      return value;
+    }
+    if (Array.isArray(value)) return value.map(absolutizeLd);
+    if (value && typeof value === "object") {
+      const out = {};
+      for (const [key, child] of Object.entries(value)) out[key] = absolutizeLd(child);
+      return out;
+    }
+    return value;
   }
+
+  document.querySelectorAll('script[type="application/ld+json"]').forEach((node) => {
+    try {
+      const data = absolutizeLd(JSON.parse(node.textContent));
+      node.textContent = JSON.stringify(data);
+    } catch { /* ignore */ }
+  });
 
   const nav = document.querySelector(".site-nav");
   if (nav && !nav.querySelector(".site-nav-toggle")) {
