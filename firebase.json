@@ -1,0 +1,18 @@
+{
+  "hosting": {
+    "public": "public",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      { "source": "/chat-rooms", "destination": "/chat-rooms.html" },
+      { "source": "/messenger", "destination": "/messenger.html" },
+      { "source": "/terms", "destination": "/terms.html" },
+      { "source": "/privacy", "destination": "/privacy.html" }
+    ],
+    "headers": [
+      {
+        "source": "config.json",
+        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      }
+    ]
+  }
+}

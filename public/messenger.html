@@ -3,34 +3,51 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Private messenger — Y-Chat</title>
-  <meta name="description" content="A private messenger in the browser. Send an instant message to one person, keep a buddy list, and ignore someone. No download. Not affiliated with Yahoo." />
-  <link rel="canonical" href="https://example.invalid/messenger" />
+  <title>Yahoo-Style Private Messenger — Y-Chat</title>
+  <meta name="description" content="Yahoo Messenger-style private IM in the browser: message one person, buddy list, status, and ignore. Guest or saved profile. No download. Not affiliated with Yahoo." />
+  <link rel="canonical" href="messenger.html" />
   <meta name="robots" content="index, follow" />
-  <meta name="theme-color" content="#fff6ee" />
+  <meta name="theme-color" content="#720e9e" />
   <meta property="og:type" content="article" />
-  <meta property="og:title" content="Private messenger — Y-Chat" />
+  <meta property="og:title" content="Yahoo-Style Private Messenger — Y-Chat" />
   <meta property="og:description" content="Send a private instant message while you are both online. Guests can message people. An account keeps buddies on this computer." />
-  <meta property="og:url" content="https://example.invalid/messenger" />
-  <meta property="og:image" content="https://example.invalid/og.png" />
-  <link rel="stylesheet" href="/styles.css" />
-  <script src="/analytics.js"></script>
+  <meta property="og:url" content="/messenger" />
+  <meta property="og:image" content="og.png" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="site-meta.js"></script>
+  <script src="analytics.js"></script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Y-Chat", "item": "https://example.invalid/" },
-      { "@type": "ListItem", "position": 2, "name": "Private messenger", "item": "https://example.invalid/messenger" }
+      { "@type": "ListItem", "position": 1, "name": "Y-Chat", "item": "index.html" },
+      { "@type": "ListItem", "position": 2, "name": "Private messenger", "item": "/messenger" }
     ]
   }
   </script>
 </head>
-<body>
+<body class="has-site-nav">
+  <header class="site-top" role="banner">
+    <nav class="site-nav" aria-label="Site">
+      <a class="site-nav-brand" href="index.html">
+        <span class="y-mark" aria-hidden="true">Y!</span>
+        <span>Y-Chat</span>
+      </a>
+      <ul class="site-nav-links">
+        <li><a href="index.html">Free chat</a></li>
+        <li><a href="chat-rooms.html">Chat rooms</a></li>
+        <li><a href="messenger.html" aria-current="page">Messenger</a></li>
+        <li><a class="nav-cta" href="index.html#gate-entry">Join now</a></li>
+        <li><a href="terms.html">Terms</a></li>
+        <li><a href="privacy.html">Privacy</a></li>
+      </ul>
+    </nav>
+  </header>
   <main class="doc">
-    <p class="updated"><a href="https://example.invalid/">Y-Chat</a> · Private messenger</p>
+    <p class="updated"><a href="index.html">Y-Chat</a> · Private messenger</p>
     <h1>A private messenger next to the chat rooms</h1>
-    <p>Y-Chat has two ways to talk. The <a href="https://example.invalid/chat-rooms">chat rooms</a> are public to the people inside them. The messenger is one person at a time. Open their name, type, and send. That instant message is not copied into the room.</p>
+    <p>Y-Chat has two ways to talk. The <a href="chat-rooms.html">chat rooms</a> are public to the people inside them. The messenger is one person at a time. Open their name, type, and send. That instant message is not copied into the room.</p>
     <p>You use it in the browser. There is no separate messenger app, no phone number, and no contact upload. If the person is online under the nickname you chose, the message can reach them. If they are not, it cannot wait for them. Nothing is queued for later, because private chats are not saved.</p>
 
     <h2>How to send a private message</h2>
@@ -66,7 +83,7 @@
     <h2>What this messenger is not</h2>
     <p>It is not a phone messenger, and it does not send SMS. It does not keep an archive you can search next week. It does not run in the background after you close the tab. It is not affiliated with Yahoo, and it is not Yahoo Messenger. It is a private chat beside a set of public rooms, for as long as both people are here.</p>
     <p>Advertising, if it is turned on later, is kept off this conversation. The welcome page and the room list are the only places an ad slot exists. The messenger window and the Send button stay clear.</p>
-    <p><a href="https://example.invalid/">Back to Y-Chat</a> · <a href="https://example.invalid/chat-rooms">Chat rooms</a> · <a href="https://example.invalid/terms">Terms</a> · <a href="https://example.invalid/privacy">Privacy</a></p>
+    <p><a href="index.html">Back to Y-Chat</a> · <a href="chat-rooms.html">Chat rooms</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></p>
   </main>
 </body>
 </html>

@@ -1,34 +1,69 @@
 # Y-Chat
 
-Local chat rooms and a private messenger in the browser. Guests can join with a nickname; optional accounts keep a buddy list and status on the machine running the server.
+Browser chat rooms and private messenger. The **UI is static**; a small **WebSocket relay** handles live rooms and messages only.
+
+## Try online (free tier)
+
+| Piece | URL |
+|--------|-----|
+| **Chat UI** | [https://sahankit.github.io/y-chat/](https://sahankit.github.io/y-chat/) (GitHub Pages) |
+| **Relay** | Google Cloud Run free tier — configured in `public/config.json` |
+
+After you push to `main`, enable **Settings → Pages → Build and deployment → GitHub Actions** once if the site is not live yet.
 
 ## Requirements
 
-- Node.js 18 or newer
+- Node.js 18+
 
-## Quick start
+## Local development
+
+Terminal 1 — chat relay (WebSocket + `/health` only):
 
 ```bash
 npm install
+cp public/config.example.json public/config.json   # points UI at ws://127.0.0.1:4317
 npm start
 ```
 
-Open the URL printed in the terminal (default port **4317**). Override with `PORT=8080 npm start`.
+Terminal 2 — static UI:
+
+```bash
+npm run static
+```
+
+Open **http://127.0.0.1:4318**. The relay listens on **4317** by default (`PORT=… npm start`).
 
 ## Tests
 
-With the server running:
+With both processes running:
 
 ```bash
 npm test
 ```
 
-Point at another host with `YCHAT_URL=http://127.0.0.1:4317 npm test`.
+## What runs where
 
-## Data
+| Piece | Host | Role |
+|--------|------|------|
+| `public/` | GitHub Pages, S3, Netlify, `npm run static`, etc. | HTML, CSS, JS, legal pages, **profiles & buddies in localStorage** |
+| `server.js` | Fly, Railway, VPS, etc. | Rooms, messages, presence, resume tokens — **no static files, no account database** |
 
-Registered users are stored in `data/accounts.json` (created on first sign-up). That folder is gitignored. Room chat and private messages are not persisted; user-created rooms disappear when the server process stops.
+Set `public/config.json` when the UI and relay are on different origins:
 
-## Public deploy
+```json
+{
+  "wsUrl": "wss://your-relay.example.com",
+  "healthUrl": "https://your-relay.example.com/health"
+}
+```
 
-Put HTTPS in front of the app and use `wss://` for WebSockets. The server rejects WebSocket connections whose `Origin` header does not match `Host`. Sign-in attempts are rate-limited per IP and username after repeated failures. Account passwords must be at least 8 characters. Configure `public/ads.json` and `public/analytics.json` only if you use AdSense or Google Analytics (both load after the legal gate on the home page).
+On the relay, set `ALLOWED_ORIGINS` to your static site origin(s), comma-separated (for example `https://sahankit.github.io`).
+
+## Deploy
+
+- **GitHub Pages:** push `main` — workflow `.github/workflows/pages.yml` publishes `public/`. Set `config.json` to your relay URL.
+- **AWS (personal account):** see **[deploy/aws/README.md](deploy/aws/README.md)** — `./deploy/aws/deploy.sh` with `AWS_PROFILE=personal`.
+- **GCP:** see **[deploy/gcp/README.md](deploy/gcp/README.md)** — `./deploy/gcp/deploy.sh` with `GCP_PROJECT=chatkaro-1754733802`.
+- **Relay elsewhere:** run `npm start` on Fly/Railway/VPS; set `ALLOWED_ORIGINS` and `config.json` `wss://` URL.
+
+Room chat and private messages are not stored on the relay. User-created rooms disappear when the relay restarts.

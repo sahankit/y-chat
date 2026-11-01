@@ -3,32 +3,34 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#fff6ee" />
-  <title>Free chat rooms and private messenger — Y-Chat</title>
-  <meta name="description" content="Free online chat rooms and a private messenger in your browser. Join as a guest and send instant messages. No download. Not affiliated with Yahoo." />
+  <meta name="theme-color" content="#720e9e" />
+  <meta name="keywords" content="Yahoo chat, Yahoo Messenger style, free chat rooms, online chat, instant messenger, guest chat, buddy list" />
+  <title>Free Yahoo-Style Chat Rooms &amp; Messenger — Y-Chat</title>
+  <meta name="description" content="Free Yahoo Messenger-style chat rooms and instant messenger in your browser. Join as a guest, pick a room, or message one person—no download. Independent project; not affiliated with Yahoo." />
   <meta name="application-name" content="Y-Chat" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
-  <link rel="canonical" href="https://example.invalid/" />
+  <link rel="canonical" href="index.html" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Y-Chat" />
-  <meta property="og:title" content="Free chat rooms and private messenger — Y-Chat" />
-  <meta property="og:description" content="Free online chat rooms and a private messenger in your browser. Join as a guest and send instant messages. No download. Not affiliated with Yahoo." />
-  <meta property="og:url" content="https://example.invalid/" />
-  <meta property="og:image" content="https://example.invalid/og.png" />
+  <meta property="og:title" content="Free Yahoo-Style Chat Rooms &amp; Messenger — Y-Chat" />
+  <meta property="og:description" content="Classic Yahoo Messenger-style chat rooms and private IM in your browser. Guest chat, buddy list, no download. Not affiliated with Yahoo." />
+  <meta property="og:url" content="/" />
+  <meta property="og:image" content="og.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="Y-Chat, free chat rooms and a private messenger" />
   <meta property="og:locale" content="en_US" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Free chat rooms and private messenger — Y-Chat" />
-  <meta name="twitter:description" content="Free online chat rooms and a private messenger in your browser. Join as a guest and send instant messages. No download. Not affiliated with Yahoo." />
-  <meta name="twitter:image" content="https://example.invalid/og.png" />
+  <meta name="twitter:title" content="Free Yahoo-Style Chat Rooms &amp; Messenger — Y-Chat" />
+  <meta name="twitter:description" content="Classic Yahoo Messenger-style chat rooms and private IM in your browser. Guest chat, no download. Not affiliated with Yahoo." />
+  <meta name="twitter:image" content="og.png" />
   <meta name="twitter:image:alt" content="Y-Chat, free chat rooms and a private messenger" />
-  <link rel="icon" href="/icon-180.png" type="image/png" sizes="180x180" />
-  <link rel="apple-touch-icon" href="/icon-180.png" />
-  <link rel="manifest" href="/manifest.webmanifest" />
-  <link rel="stylesheet" href="/styles.css" />
-  <script src="/analytics.js"></script>
+  <link rel="icon" href="icon-180.png" type="image/png" sizes="180x180" />
+  <link rel="apple-touch-icon" href="icon-180.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="site-meta.js"></script>
+  <script src="analytics.js"></script>
   <script>
     try {
       if (localStorage.getItem("ychat-legal") === "2") document.documentElement.classList.add("legal-ok");
@@ -40,12 +42,12 @@
     "@type": "WebApplication",
     "name": "Y-Chat",
     "alternateName": "Y Chat",
-    "url": "https://example.invalid/",
-    "image": "https://example.invalid/og.png",
+    "url": "/",
+    "image": "/og.png",
     "applicationCategory": "CommunicationApplication",
     "operatingSystem": "Web",
     "browserRequirements": "Requires JavaScript",
-    "description": "Free online chat rooms and a private messenger in the browser. Join a guest chat and send instant messages. No download. Not affiliated with Yahoo.",
+    "description": "Free Yahoo Messenger-style chat rooms and instant messenger in the browser. Guest chat, optional buddy list, no download. Not affiliated with Yahoo.",
     "featureList": [
       "Public chat rooms",
       "Private messenger",
@@ -140,6 +142,14 @@
       },
       {
         "@type": "Question",
+        "name": "Is there a Yahoo-style chat room online?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Y-Chat offers free public chat rooms and a private messenger with a classic Yahoo Messenger-style layout in the browser. Join as a guest with a nickname—no download required."
+        }
+      },
+      {
+        "@type": "Question",
         "name": "Does a guest stay online after I close the page?",
         "acceptedAnswer": {
           "@type": "Answer",
@@ -149,24 +159,59 @@
     ]
   }
   </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Y-Chat",
+    "alternateName": "Yahoo-style free chat rooms",
+    "url": "/",
+    "description": "Free Yahoo Messenger-style chat rooms and private instant messenger in the browser. Guest chat, no download.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Y-Chat",
+      "url": "/"
+    }
+  }
+  </script>
 </head>
-<body>
+<body class="has-site-nav">
+  <a class="skip-link" href="#gate-entry">Skip to sign in</a>
+  <header class="site-top" role="banner">
+    <nav class="site-nav" aria-label="Site">
+      <a class="site-nav-brand" href="index.html">
+        <span class="y-mark" aria-hidden="true">Y!</span>
+        <span>Y-Chat</span>
+      </a>
+      <ul class="site-nav-links">
+        <li><a href="index.html" aria-current="page">Free chat</a></li>
+        <li><a href="chat-rooms.html">Chat rooms</a></li>
+        <li><a href="messenger.html">Messenger</a></li>
+        <li><a class="nav-cta" href="index.html#gate-entry">Join now</a></li>
+        <li><a href="terms.html">Terms</a></li>
+        <li><a href="privacy.html">Privacy</a></li>
+      </ul>
+    </nav>
+  </header>
   <main id="gate">
     <div class="sky" aria-hidden="true">
-      <span class="float b1">hi</span>
-      <span class="float b2">hey :)</span>
+      <span class="float b1">:)</span>
+      <span class="float b2">Y!</span>
       <span class="float b3">♪</span>
     </div>
     <div class="gate-card" id="gate-card">
-      <h1 class="brand big">
-        <span class="y-mark" aria-hidden="true">Y</span>
-        <span class="word" aria-hidden="true">Chat</span>
-        <span class="sr-only">Y-Chat</span>
-      </h1>
-      <p class="tagline">Free chat rooms and a private messenger. Come on in, pick a name, and say hello.</p>
+      <header class="gate-head">
+        <h1 class="brand big">
+          <span class="y-mark" aria-hidden="true">Y!</span>
+          <span class="word" aria-hidden="true">Chat</span>
+          <span class="sr-only">Y-Chat — Yahoo-style free chat rooms and messenger</span>
+        </h1>
+        <p class="gate-sub">Classic chat rooms &amp; instant messenger</p>
+      </header>
+      <p class="tagline">Pick a nickname, join a public room, or open a private message—just like the old Yahoo days. No app to install.</p>
       <p id="server-pill" class="pill">Checking the server…</p>
       <div id="legal-gate">
-        <p class="hint">Read the <a href="/terms" target="_blank" rel="noopener">Terms &amp; Conditions</a> and <a href="/privacy" target="_blank" rel="noopener">Privacy Policy</a>. This browser asks once.</p>
+        <p class="hint">Read the <a href="terms.html" target="_blank" rel="noopener">Terms &amp; Conditions</a> and <a href="privacy.html" target="_blank" rel="noopener">Privacy Policy</a>. This browser asks once.</p>
         <form id="form-legal" method="post" action="/">
           <label class="agree" for="legal-check">
             <input id="legal-check" type="checkbox" />
@@ -187,7 +232,7 @@
         <label for="guest-nick">Nickname</label>
         <input id="guest-nick" name="nick" maxlength="16" autocomplete="nickname" placeholder="coolcat" required />
         <p class="hint">Letters, numbers, and underscores. 2–16 characters. No password needed.</p>
-        <button class="primary wide" type="submit">Come on in</button>
+        <button class="primary wide" type="submit" aria-label="Join chat as guest">Come on in</button>
       </form>
 
       <form id="form-login" hidden>
@@ -205,24 +250,24 @@
         <input id="reg-pass" name="password" type="password" minlength="8" maxlength="72" autocomplete="new-password" required />
         <label for="reg-confirm">Confirm password</label>
         <input id="reg-confirm" name="confirm" type="password" minlength="8" maxlength="72" autocomplete="new-password" required />
-        <p class="hint">An account keeps your buddies and status on this computer. Passwords are 8–72 characters.</p>
+        <p class="hint">A profile saves buddies and status in this browser only (not on the chat relay). Passwords are 8–72 characters.</p>
         <button class="primary wide" type="submit">Make my account</button>
       </form>
       </div>
 
       <p id="gate-error" class="error" role="alert" hidden></p>
-      <p class="fine">Public rooms, private messages, and guest nicknames. A refresh clears the messages and brings you back to the same room and private chats. Inspired by classic chat rooms. Not affiliated with Yahoo. <span class="legal-links"><a href="/terms">Terms</a> · <a href="/privacy">Privacy</a></span></p>
+      <p class="fine">Public rooms, private messages, and guest nicknames. A refresh clears the messages and brings you back to the same room and private chats. Inspired by classic chat rooms. Not affiliated with Yahoo. <span class="legal-links"><a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></span></p>
       <noscript><p class="fine">JavaScript is required for live rooms and private messages.</p></noscript>
     </div>
     <aside id="ad-welcome" class="ad-slot" hidden aria-label="Advertisement"></aside>
     <section class="discover" aria-labelledby="discover-title">
-      <h2 id="discover-title">A free chat room and a private messenger in the browser</h2>
+      <h2 id="discover-title">Yahoo-style free chat rooms and messenger in the browser</h2>
       <p>Y-Chat is an online chat you open like a web page. There is no messenger app to install. Pick a nickname, walk into a public chat room, or open a private window with one person. Guests are welcome. An account is optional, and it does not keep a copy of the conversation.</p>
       <p>If you searched for a chat, a chat room, or a simple messenger, this is that page. The rooms are shared with whoever is inside. A private message is not. The words stay on screen while you are talking, and they are not stored as a history.</p>
       <nav class="discover-nav" aria-label="On this page">
         <a href="#how-chat-works">How to start</a>
-        <a href="#chat-rooms">Chat rooms</a>
-        <a href="#private-messenger">Messenger</a>
+        <a href="chat-rooms.html">Chat rooms guide</a>
+        <a href="messenger.html">Messenger guide</a>
         <a href="#guest-chat">Guests</a>
         <a href="#what-a-refresh-does">Refresh</a>
         <a href="#chat-questions">Questions</a>
@@ -255,13 +300,13 @@
       </div>
       <p>On a phone, Rooms, Chat, and People are three screens. The room list scrolls above the tab bar. Opening a room switches you into the conversation, with the composer sitting above that bar. On a wider window the categories, the room, and the people list sit side by side.</p>
       <p>Someone who joins after you does not receive the lines from before they arrived. There is no transcript to catch up on. That is deliberate: a room is a live chat, not a record. Tapping Rooms while you are inside a room leaves it and returns you to the list.</p>
-      <p><a href="/chat-rooms">Read the full guide to the chat rooms</a></p>
+      <p><a href="chat-rooms.html">Read the full guide to the chat rooms</a></p>
 
       <h2 id="private-messenger">A private messenger</h2>
       <p>The messenger is how you talk to one person instead of the whole room. Open their name from the people list, from the room, or from your buddies. A private window opens. Type, then send. The room does not see that message. The other person sees it if they are online and they have not ignored you.</p>
       <p>A phone shows one private chat at a time, as a sheet above the tab bar. A wide screen can keep up to three private windows open along the bottom. You can minimize a window, close it, or ignore someone. Ignore stops their room lines and their private messages from reaching you. You can undo that later.</p>
       <p>People who are online show a status: available, away, or busy, plus a short status line if they wrote one. A little sound can play when a private message arrives. You can turn the sound off. Small picture marks in the composer become emoji, the way old chat shorthand used to.</p>
-      <p><a href="/messenger">Read how the private messenger works</a></p>
+      <p><a href="messenger.html">Read how the private messenger works</a></p>
 
       <h2 id="guest-chat">Guest chat, or an account</h2>
       <p>A guest chat is the fast way in. There is no password. This browser remembers the nickname so the box can be filled in next time. It does not remember the conversation. When the guest leaves, that visit is over and the name is free again.</p>
@@ -292,16 +337,18 @@
       <p>LobbyBot is the greeter in the Welcome Lobby. It says hello when you arrive, and it answers a few simple lines such as hi, help, or ping. You can also send it a private message.</p>
       <h3>Is this Yahoo Messenger?</h3>
       <p>No. Y-Chat is an independent chat with public rooms and private messages. It is not affiliated with Yahoo.</p>
+      <h3>Is there a Yahoo-style chat room online?</h3>
+      <p>Y-Chat offers free public chat rooms and a private messenger with a classic Yahoo Messenger-style layout in the browser. Join as a guest with a nickname—no download required.</p>
       <h3>Does a guest stay online after I close the page?</h3>
       <p>No. A guest is here only while the page is open. Closing the tab frees the nickname. An account can sign in again, and it still only keeps buddies and a status, not the chat.</p>
-      <p class="fine"><a href="/chat-rooms">Chat rooms</a> · <a href="/messenger">Private messenger</a> · <a href="/terms">Terms</a> · <a href="/privacy">Privacy</a></p>
+      <p class="fine"><a href="chat-rooms.html">Chat rooms</a> · <a href="messenger.html">Private messenger</a> · <a href="terms.html">Terms</a> · <a href="privacy.html">Privacy</a></p>
     </section>
   </main>
 
   <div id="shell" data-pane="rooms" hidden>
     <header class="top">
-      <button type="button" class="brand" data-action="home" title="Back to rooms">
-        <span class="y-mark">Y</span>
+      <button type="button" class="brand" data-action="home" title="Back to rooms" aria-label="Y-Chat home, all rooms">
+        <span class="y-mark" aria-hidden="true">Y!</span>
         <span class="word">Chat</span>
       </button>
       <div id="place" class="place">Lobby</div>
@@ -344,6 +391,7 @@
   <div id="dock" aria-live="polite"></div>
   <p id="reconnect" class="reconnect" hidden>Connection dropped. This chat stays in the tab while we reconnect.</p>
   <div id="toasts" aria-live="polite"></div>
-  <script src="/app.js"></script>
+  <script src="profile.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

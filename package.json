@@ -2,10 +2,11 @@
   "name": "y-chat",
   "version": "1.0.0",
   "private": true,
-  "description": "Local chat rooms and messenger. Guests can walk in; accounts keep a buddy list.",
+  "description": "Static UI plus a minimal WebSocket relay for chat rooms and messenger.",
   "scripts": {
     "start": "node server.js",
-    "test": "node test/smoke.js"
+    "static": "npx --yes serve public -l 4318",
+    "test": "YCHAT_STATIC_URL=http://127.0.0.1:4318 node test/smoke.js"
   },
   "engines": {
     "node": ">=18"

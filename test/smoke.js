@@ -2,8 +2,9 @@
 
 const { WebSocket } = require("ws");
 
-const BASE = process.env.YCHAT_URL || "http://127.0.0.1:4317";
-const WS = BASE.replace(/^http/, "ws");
+const RELAY = process.env.YCHAT_URL || "http://127.0.0.1:4317";
+const STATIC = process.env.YCHAT_STATIC_URL || "http://127.0.0.1:4318";
+const WS = RELAY.replace(/^http/, "ws");
 
 function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -56,13 +57,18 @@ async function open() {
 }
 
 async function main() {
-  const health = await fetch(`${BASE}/health`);
+  const health = await fetch(`${RELAY}/health`);
   assert(health.ok, "health check failed");
+  const healthBody = await health.json();
+  assert(healthBody.ok && healthBody.mode === "websocket", "relay should be websocket-only");
 
-  const privacy = await fetch(`${BASE}/privacy`);
-  const terms = await fetch(`${BASE}/terms`);
-  const sitemap = await fetch(`${BASE}/sitemap.xml`);
-  assert(privacy.ok && terms.ok, "legal pages should load");
+  const root = await fetch(`${RELAY}/`);
+  assert(root.status === 404, "relay should not serve the UI");
+
+  const privacy = await fetch(`${STATIC}/privacy`);
+  const terms = await fetch(`${STATIC}/terms`);
+  const sitemap = await fetch(`${STATIC}/sitemap.xml`);
+  assert(privacy.ok && terms.ok, "legal pages should load from static hosting");
   const privacyText = await privacy.text();
   const termsText = await terms.text();
   const map = await sitemap.text();
@@ -70,8 +76,8 @@ async function main() {
   assert(termsText.includes("Terms") && termsText.includes("/privacy"), "terms page incomplete");
   assert(map.includes("/terms") && map.includes("/privacy"), "sitemap should list legal pages");
   assert(map.includes("/chat-rooms") && map.includes("/messenger"), "sitemap should list the guides");
-  const roomsPage = await fetch(`${BASE}/chat-rooms`);
-  const messengerPage = await fetch(`${BASE}/messenger`);
+  const roomsPage = await fetch(`${STATIC}/chat-rooms`);
+  const messengerPage = await fetch(`${STATIC}/messenger`);
   assert(roomsPage.ok && messengerPage.ok, "guide pages should load");
   const roomsHtml = await roomsPage.text();
   const messengerHtml = await messengerPage.text();
@@ -87,6 +93,7 @@ async function main() {
   const bHello = await beta.until((msg) => msg.type === "hello");
   assert(aHello.user.guest && bHello.user.guest, "guests should be marked guest");
   assert(aHello.rooms.some((room) => room.id === "welcome"), "welcome room missing");
+  assert(aHello.buddies === undefined, "server should not send buddy lists");
 
   alpha.send({ type: "joinRoom", roomId: "welcome" });
   const joined = await alpha.until((msg) => msg.type === "room");
@@ -116,28 +123,12 @@ async function main() {
   alpha.send({ type: "say", text: "should-be-hidden" });
   assert(!(await bufferedHas(beta, "should-be-hidden")), "ignored message was delivered");
 
-  const account = `Acct${stamp.slice(-5)}`;
   const member = await open();
-  member.send({ type: "register", username: account, password: "secretpass" });
-  const registered = await member.until((msg) => msg.type === "hello");
-  assert(registered.user.guest === false, "account should not be a guest");
-  member.send({ type: "addBuddy", nick: aHello.user.nick });
-  const buddyErr = await member.until((msg) => msg.type === "error");
-  assert(/account/i.test(buddyErr.message), "guest buddy add should fail");
-
-  const taken = await open();
-  taken.send({ type: "guest", nick: account });
-  const takenErr = await taken.until((msg) => msg.type === "error");
-  assert(/account/i.test(takenErr.message), "guest should not take a registered name");
-
+  member.send({ type: "guest", nick: `SmokeM${stamp.slice(-4)}` });
+  await member.until((msg) => msg.type === "hello");
   member.send({ type: "createRoom", name: `Smoke ${stamp.slice(-4)}`, category: "Random", topic: "test" });
   const created = await member.until((msg) => msg.type === "room");
   assert(created.room.category === "Random", "created room did not open");
-
-  const wrong = await open();
-  wrong.send({ type: "login", username: account, password: "nope" });
-  const wrongErr = await wrong.until((msg) => msg.type === "error");
-  assert(/don't match|do not match/i.test(wrongErr.message), "bad password should fail");
 
   assert(/^[a-f0-9]{32}$/.test(aHello.resume || ""), "resume token missing");
   const again = await open();
@@ -150,7 +141,7 @@ async function main() {
   const nopeErr = await nope.until((msg) => msg.type === "error");
   assert(/sign in again/i.test(nopeErr.message), "bad resume token should fail");
 
-  for (const c of [alpha, beta, late, member, taken, wrong, again, nope]) c.ws.close();
+  for (const c of [alpha, beta, late, member, again, nope]) c.ws.close();
   console.log("smoke ok");
 }
 

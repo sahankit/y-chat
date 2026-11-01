@@ -26,6 +26,8 @@ const MAX_OPEN_IMS = 3;
 
 const LIVE_KEY = "ychat-live";
 
+let ychatConfig = { wsUrl: "", healthUrl: "" };
+
 const state = {
   ws: null,
   me: null,
@@ -111,8 +113,71 @@ function fillEmote(node, text) {
 }
 
 function wsUrl() {
+  const raw = String(ychatConfig.wsUrl || "").trim();
+  if (raw) return raw.replace(/^http/i, "ws");
   const proto = location.protocol === "https:" ? "wss" : "ws";
   return `${proto}://${location.host}`;
+}
+
+function healthUrl() {
+  const raw = String(ychatConfig.healthUrl || "").trim();
+  if (raw) return raw;
+  const base = wsUrl().replace(/^wss/i, "https").replace(/^ws/i, "http");
+  return `${base.replace(/\/$/, "")}/health`;
+}
+
+function normalizeRelayConfig() {
+  const h = location.hostname;
+  const loopback = h === "localhost" || h === "127.0.0.1";
+  if (loopback) {
+    if (!String(ychatConfig.wsUrl || "").trim()) {
+      ychatConfig.wsUrl = `ws://${h}:4317`;
+    }
+    if (!String(ychatConfig.healthUrl || "").trim()) {
+      ychatConfig.healthUrl = `http://${h}:4317/health`;
+    }
+    for (const key of ["wsUrl", "healthUrl"]) {
+      const value = String(ychatConfig[key] || "");
+      if (!value) continue;
+      ychatConfig[key] = value
+        .replace(/\/\/127\.0\.0\.1(?=:\d+|\/|$)/i, `//${h}`)
+        .replace(/\/\/localhost(?=:\d+|\/|$)/i, `//${h}`);
+    }
+  }
+}
+
+function buildBuddiesFromLocal() {
+  if (!window.YchatProfile || !state.me || !YchatProfile.isSignedInNick(state.me.nick)) return [];
+  return YchatProfile.getBuddies().map((key) => {
+    const online = state.online.find((user) => user.nick.toLowerCase() === key);
+    if (online) return online;
+    const saved = YchatProfile.profileForNick(key);
+    return {
+      nick: saved ? saved.nick : key,
+      status: "offline",
+      statusMessage: saved ? saved.statusMessage || "" : "",
+      guest: false,
+      bot: false,
+      roomId: null,
+      roomName: null,
+    };
+  });
+}
+
+function syncLocalProfile() {
+  if (!window.YchatProfile || !state.me) return;
+  if (!YchatProfile.isSignedInNick(state.me.nick)) {
+    state.me.guest = true;
+    state.buddies = [];
+    return;
+  }
+  state.me.guest = false;
+  state.buddies = buildBuddiesFromLocal();
+  const savedStatus = YchatProfile.statusMessageForActive();
+  if (savedStatus) {
+    state.me.statusMessage = savedStatus;
+    $("status-message").value = savedStatus;
+  }
 }
 
 function send(obj) {
@@ -231,7 +296,7 @@ function showGate(mode, message) {
   setGateMode(mode || "guest");
   setGateError(message || "");
   setBusy(false);
-  document.title = "Free chat rooms and private messenger — Y-Chat";
+  document.title = "Free Yahoo-Style Chat Rooms & Messenger — Y-Chat";
 }
 
 function setGateMode(mode) {
@@ -368,7 +433,7 @@ function onMessage(msg) {
     case "online": return applyOnline(msg.users || []);
     case "rooms": return applyRooms(msg.rooms || []);
     case "buddies":
-      state.buddies = msg.buddies || [];
+      syncLocalProfile();
       renderPeople();
       return;
     case "me":
@@ -379,10 +444,6 @@ function onMessage(msg) {
     case "said": return onSaid(msg);
     case "left": return showLobby();
     case "pm": return onPm(msg);
-    case "replaced":
-      state.manualClose = true;
-      showGate("login", "You signed in somewhere else.");
-      return;
     default: break;
   }
 }
@@ -464,13 +525,13 @@ function applyHello(msg) {
   state.categories = msg.categories || state.categories;
   state.rooms = msg.rooms || [];
   state.online = msg.users || [];
-  state.buddies = msg.buddies || [];
   state.seenOnline = true;
+  syncLocalProfile();
   state.view = "lobby";
   state.room = null;
   state.roomLog = [];
   state.resumeRoomId = null;
-  state.peopleTab = msg.user.guest ? "online" : "buddies";
+  state.peopleTab = state.me.guest ? "online" : "buddies";
   state.ignored = new Set();
   state.ims = {};
   state.pendingPlace = null;
@@ -513,8 +574,8 @@ function resumeHello(msg) {
   state.categories = msg.categories || state.categories;
   state.rooms = msg.rooms || [];
   state.online = msg.users || [];
-  state.buddies = msg.buddies || [];
   state.seenOnline = true;
+  syncLocalProfile();
   $("gate").hidden = true;
   $("shell").hidden = false;
   setIndexed(false);
@@ -551,6 +612,9 @@ function applyOnline(users) {
     }
   }
   state.seenOnline = true;
+  if (state.me && window.YchatProfile && YchatProfile.isSignedInNick(state.me.nick)) {
+    state.buddies = buildBuddiesFromLocal();
+  }
   renderPeople();
   if (state.view === "room") renderRoster();
   refreshImHeaders();
@@ -640,7 +704,7 @@ function adBox(name) {
 }
 
 function setupAds() {
-  fetch("/ads.json")
+  fetch(new URL("ads.json", location.href).href)
     .then((res) => (res.ok ? res.json() : null))
     .then((cfg) => {
       if (!cfg || !/^ca-pub-\d+$/.test(String(cfg.client || ""))) return;
@@ -952,12 +1016,12 @@ function renderPeople() {
   if (state.peopleTab === "buddies") {
     form.hidden = !state.me || state.me.guest;
     if (!state.me || state.me.guest) {
-      note.textContent = "Buddies stay put once you have an account. As a guest, anyone online is one tap away.";
+      note.textContent = "Buddies stay in this browser once you sign in to a saved profile. As a guest, anyone online is one tap away.";
       return;
     }
     note.textContent = state.buddies.length
-      ? "Tap a buddy for a private chat. Offline friends wait here."
-      : "No buddies yet. Add someone who has an account.";
+      ? "Tap a buddy for a private chat. Offline names wait here."
+      : "No buddies yet. Add someone by nickname.";
     for (const buddy of sortPeople(state.buddies)) {
       host.append(personRow(buddy, { removable: true }));
     }
@@ -1127,7 +1191,7 @@ function imWindow(im) {
     el("div", { class: "im-sub", "data-key": im.key }, headerStatus(person)),
     el("div", { class: "im-tools" },
       el("button", { type: "button", class: "texty", "data-action": "ignore", "data-nick": im.nick }, ignored ? "Unignore" : "Ignore"),
-      !state.me.guest && !person.bot && !isBuddy
+      state.me && window.YchatProfile && YchatProfile.isSignedInNick(state.me.nick) && !person.bot && !isBuddy
         ? el("button", { type: "button", class: "texty", "data-action": "add-buddy", "data-nick": im.nick }, "Add buddy")
         : null),
     el("div", { class: "im-log", "data-key": im.key }),
@@ -1200,7 +1264,7 @@ function onPm(msg) {
 
 function updateTitle() {
   const unread = Object.values(state.ims).reduce((sum, im) => sum + (im.open && im.minimized ? im.unread : 0), 0);
-  document.title = unread ? `(${unread}) Y-Chat` : "Free chat rooms and private messenger — Y-Chat";
+  document.title = unread ? `(${unread}) Y-Chat` : "Free Yahoo-Style Chat Rooms & Messenger — Y-Chat";
 }
 
 function toggleIgnore(nick) {
@@ -1222,6 +1286,9 @@ function toggleIgnore(nick) {
 }
 
 function saveStatus() {
+  if (window.YchatProfile && state.me && YchatProfile.isSignedInNick(state.me.nick)) {
+    YchatProfile.saveStatusMessage($("status-message").value);
+  }
   send({
     type: "setStatus",
     status: $("status").value,
@@ -1267,6 +1334,7 @@ function resumeAudio() {
 function signOut() {
   state.manualClose = true;
   state.pendingPlace = null;
+  if (window.YchatProfile) YchatProfile.signOutLocal();
   send({ type: "signOut" });
   clearLive();
   if (state.ws) state.ws.close();
@@ -1309,8 +1377,25 @@ document.addEventListener("click", (event) => {
     renderPeople();
     return;
   }
-  if (action === "remove-buddy") return send({ type: "removeBuddy", nick: target.dataset.nick });
-  if (action === "add-buddy") return send({ type: "addBuddy", nick: target.dataset.nick });
+  if (action === "remove-buddy") {
+    if (window.YchatProfile) YchatProfile.removeBuddy(target.dataset.nick);
+    syncLocalProfile();
+    renderPeople();
+    toast(`Removed ${target.dataset.nick}.`);
+    return;
+  }
+  if (action === "add-buddy") {
+    if (!window.YchatProfile || !state.me || !YchatProfile.isSignedInNick(state.me.nick)) {
+      toast("Sign in to save buddies on this device.");
+      return;
+    }
+    const err = YchatProfile.addBuddy(target.dataset.nick);
+    if (err) { toast(err); return; }
+    syncLocalProfile();
+    renderPeople();
+    toast(`${target.dataset.nick} is on your buddy list.`);
+    return;
+  }
   if (action === "ignore") return toggleIgnore(target.dataset.nick);
   if (action === "close-im") return closeIm(target.dataset.key);
   if (action === "min-im") return minimizeIm(target.dataset.key);
@@ -1346,29 +1431,53 @@ $("form-guest").addEventListener("submit", (event) => {
   connect({ type: "guest", nick });
 });
 
-$("form-login").addEventListener("submit", (event) => {
+$("form-login").addEventListener("submit", async (event) => {
   event.preventDefault();
-  connect({ type: "login", username: $("login-name").value.trim(), password: $("login-pass").value });
+  if (!window.YchatProfile) return;
+  setBusy(true);
+  setGateError("");
+  const username = $("login-name").value.trim();
+  const err = await YchatProfile.login(username, $("login-pass").value);
+  if (err) {
+    setGateError(err);
+    setBusy(false);
+    return;
+  }
+  connect({ type: "guest", nick: username, guest: false });
 });
 
-$("form-register").addEventListener("submit", (event) => {
+$("form-register").addEventListener("submit", async (event) => {
   event.preventDefault();
+  if (!window.YchatProfile) return;
   if ($("reg-pass").value !== $("reg-confirm").value) {
     setGateError("Those passwords don't match.");
     return;
   }
-  if ($("reg-pass").value.length < 8) {
-    setGateError("Use a password of at least 8 characters.");
+  setBusy(true);
+  setGateError("");
+  const username = $("reg-name").value.trim();
+  const err = await YchatProfile.register(username, $("reg-pass").value);
+  if (err) {
+    setGateError(err);
+    setBusy(false);
     return;
   }
-  connect({ type: "register", username: $("reg-name").value.trim(), password: $("reg-pass").value });
+  connect({ type: "guest", nick: username, guest: false });
 });
 
 $("add-buddy").addEventListener("submit", (event) => {
   event.preventDefault();
   const nick = $("buddy-nick").value.trim();
   if (!nick) return;
-  send({ type: "addBuddy", nick });
+  if (!window.YchatProfile || !state.me || !YchatProfile.isSignedInNick(state.me.nick)) {
+    toast("Sign in to save buddies on this device.");
+    return;
+  }
+  const err = YchatProfile.addBuddy(nick);
+  if (err) { toast(err); return; }
+  syncLocalProfile();
+  renderPeople();
+  toast(`${nick} is on your buddy list.`);
   $("buddy-nick").value = "";
 });
 
@@ -1399,15 +1508,35 @@ if (localStorage.getItem("ychat-sound") === "0") {
   $("sound").checked = false;
 }
 
-fetch("/health")
-  .then((res) => {
-    if (!res.ok) throw new Error("down");
-    $("server-pill").textContent = "Server is up on this computer";
-    $("server-pill").classList.add("ok");
+function pingRelay() {
+  const pill = $("server-pill");
+  const url = healthUrl();
+  fetch(url)
+    .then((res) => {
+      if (!res.ok) throw new Error("down");
+      pill.textContent = "Chat relay is reachable";
+      pill.classList.remove("bad");
+      pill.classList.add("ok");
+    })
+    .catch(() => {
+      pill.classList.remove("ok");
+      pill.classList.add("bad");
+      const loopback = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+      pill.textContent = loopback
+        ? "Chat relay is not running — run npm start in the project folder"
+        : "Chat relay is not reachable — set wsUrl in config.json";
+    });
+}
+
+fetch(new URL("config.json", location.href).href)
+  .then((res) => (res.ok ? res.json() : null))
+  .then((cfg) => {
+    if (cfg && typeof cfg === "object") ychatConfig = { ...ychatConfig, ...cfg };
+    normalizeRelayConfig();
   })
   .catch(() => {
-    $("server-pill").textContent = "Server is not running";
-    $("server-pill").classList.add("bad");
-  });
+    normalizeRelayConfig();
+  })
+  .finally(() => pingRelay());
 
 applyLegalGate();

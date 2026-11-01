@@ -17,7 +17,7 @@ let started = false;
 function startYchatAnalytics() {
   if (started) return;
   started = true;
-  fetch("/analytics.json")
+  fetch(new URL("analytics.json", location.href).href)
     .then((res) => (res.ok ? res.json() : null))
     .then((cfg) => {
       const id = String((cfg && cfg.measurementId) || "").trim();

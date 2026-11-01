@@ -1,0 +1,200 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Y-Chat — static UI (S3 + CloudFront) and WebSocket relay (EC2 + CloudFront).
+
+Parameters:
+  ProjectName:
+    Type: String
+    Default: ychat
+  GitHubRepo:
+    Type: String
+    Default: https://github.com/sahankit/y-chat.git
+  InstanceType:
+    Type: String
+    Default: t3.micro
+  KeyName:
+    Type: String
+    Default: ""
+    Description: Optional EC2 key pair for SSH (leave empty to use SSM Session Manager only).
+
+Conditions:
+  HasKeyName: !Not [!Equals [!Ref KeyName, ""]]
+
+Resources:
+  UIBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: AES256
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  UIOriginAccessControl:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub "${ProjectName}-ui-oac"
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  UIBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref UIBucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AllowCloudFrontRead
+            Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub "${UIBucket.Arn}/*"
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${UIDistribution}"
+
+  UIDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
+        HttpVersion: http2and3
+        Origins:
+          - Id: ui-s3
+            DomainName: !GetAtt UIBucket.RegionalDomainName
+            OriginAccessControlId: !GetAtt UIOriginAccessControl.Id
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+        DefaultCacheBehavior:
+          TargetOriginId: ui-s3
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD, OPTIONS]
+          CachedMethods: [GET, HEAD, OPTIONS]
+          Compress: true
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+        CustomErrorResponses:
+          - ErrorCode: 403
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+            ErrorCachingMinTTL: 0
+          - ErrorCode: 404
+            ResponseCode: 200
+            ResponsePagePath: /index.html
+            ErrorCachingMinTTL: 0
+        PriceClass: PriceClass_100
+
+  RelaySecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Y-Chat relay — Node behind CloudFront
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 4317
+          ToPort: 4317
+          CidrIp: 0.0.0.0/0
+          Description: WebSocket relay (TLS terminated at CloudFront)
+
+  RelayRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+
+  RelayInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles: [!Ref RelayRole]
+
+  RelayInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Sub "{{resolve:ssm:/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64}}"
+      InstanceType: !Ref InstanceType
+      IamInstanceProfile: !Ref RelayInstanceProfile
+      KeyName: !If [HasKeyName, !Ref KeyName, !Ref AWS::NoValue]
+      SecurityGroupIds: [!Ref RelaySecurityGroup]
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          set -euxo pipefail
+          dnf install -y git
+          curl -fsSL https://rpm.nodesource.com/setup_20.x | bash -
+          dnf install -y nodejs
+          rm -rf /opt/y-chat
+          git clone --depth 1 ${GitHubRepo} /opt/y-chat
+          cd /opt/y-chat
+          npm install --omit=dev
+          cat >/etc/systemd/system/y-chat.service <<UNIT
+          [Unit]
+          Description=Y-Chat relay
+          After=network.target
+          [Service]
+          Type=simple
+          WorkingDirectory=/opt/y-chat
+          Environment=PORT=4317
+          Environment=ALLOWED_ORIGINS=https://${UIDistribution.DomainName}
+          ExecStart=/usr/bin/node server.js
+          Restart=always
+          RestartSec=3
+          [Install]
+          WantedBy=multi-user.target
+          UNIT
+          systemctl daemon-reload
+          systemctl enable --now y-chat
+      Tags:
+        - Key: Name
+          Value: !Sub "${ProjectName}-relay"
+
+  RelayDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        HttpVersion: http2and3
+        Origins:
+          - Id: relay-ec2
+            DomainName: !GetAtt RelayInstance.PublicDnsName
+            CustomOriginConfig:
+              OriginProtocolPolicy: http-only
+              HTTPPort: 4317
+              OriginSSLProtocols: [TLSv1.2]
+        DefaultCacheBehavior:
+          TargetOriginId: relay-ec2
+          ViewerProtocolPolicy: https-only
+          AllowedMethods: [GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE]
+          CachedMethods: [GET, HEAD]
+          Compress: true
+          CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad
+          OriginRequestPolicyId: 216adef6-5c04-47cc-0b7e-83b668636a9f
+        PriceClass: PriceClass_100
+
+Outputs:
+  UiUrl:
+    Description: Open this URL for the chat UI
+    Value: !Sub "https://${UIDistribution.DomainName}"
+  RelayWebSocketUrl:
+    Description: Put in public/config.json as wsUrl (use wss)
+    Value: !Sub "wss://${RelayDistribution.DomainName}"
+  RelayHealthUrl:
+    Description: Put in public/config.json as healthUrl
+    Value: !Sub "https://${RelayDistribution.DomainName}/health"
+  UiBucketName:
+    Value: !Ref UIBucket
+  UiDistributionId:
+    Value: !Ref UIDistribution
+  RelayInstanceId:
+    Value: !Ref RelayInstance
