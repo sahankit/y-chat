@@ -16,7 +16,8 @@ If you fork the repo to another GitHub Pages path, update **sitemap.xml** and **
 
 1. Open [Google Search Console](https://search.google.com/search-console).
 2. Add a **URL prefix** property: `https://sahankit.github.io/y-chat/`
-3. Verify (HTML file upload in `public/`, or meta tag in `index.html`, or GitHub as association if available).
+3. Verify — HTML file `public/google34da527c15058477.html` is deployed at  
+   `https://sahankit.github.io/y-chat/google34da527c15058477.html`
 4. **Sitemaps** → submit: `https://sahankit.github.io/y-chat/sitemap.xml`
 5. Use **Pages** and **Performance** reports after a few days to see queries and indexing.
 
