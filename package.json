@@ -1,0 +1,16 @@
+{
+  "name": "y-chat",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local chat rooms and messenger. Guests can walk in; accounts keep a buddy list.",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/smoke.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "ws": "^8.18.3"
+  }
+}

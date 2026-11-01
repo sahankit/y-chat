@@ -1,0 +1,25 @@
+{
+  "name": "Y-Chat — Free chat rooms and messenger",
+  "short_name": "Y-Chat",
+  "description": "Free online chat rooms and a private messenger in the browser. Join as a guest. Not affiliated with Yahoo.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fff6ee",
+  "theme_color": "#fff6ee",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/icon-180.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/og.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

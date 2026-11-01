@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Private messenger — Y-Chat</title>
+  <meta name="description" content="A private messenger in the browser. Send an instant message to one person, keep a buddy list, and ignore someone. No download. Not affiliated with Yahoo." />
+  <link rel="canonical" href="https://example.invalid/messenger" />
+  <meta name="robots" content="index, follow" />
+  <meta name="theme-color" content="#fff6ee" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Private messenger — Y-Chat" />
+  <meta property="og:description" content="Send a private instant message while you are both online. Guests can message people. An account keeps buddies on this computer." />
+  <meta property="og:url" content="https://example.invalid/messenger" />
+  <meta property="og:image" content="https://example.invalid/og.png" />
+  <link rel="stylesheet" href="/styles.css" />
+  <script src="/analytics.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Y-Chat", "item": "https://example.invalid/" },
+      { "@type": "ListItem", "position": 2, "name": "Private messenger", "item": "https://example.invalid/messenger" }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <main class="doc">
+    <p class="updated"><a href="https://example.invalid/">Y-Chat</a> · Private messenger</p>
+    <h1>A private messenger next to the chat rooms</h1>
+    <p>Y-Chat has two ways to talk. The <a href="https://example.invalid/chat-rooms">chat rooms</a> are public to the people inside them. The messenger is one person at a time. Open their name, type, and send. That instant message is not copied into the room.</p>
+    <p>You use it in the browser. There is no separate messenger app, no phone number, and no contact upload. If the person is online under the nickname you chose, the message can reach them. If they are not, it cannot wait for them. Nothing is queued for later, because private chats are not saved.</p>
+
+    <h2>How to send a private message</h2>
+    <ol>
+      <li>Come in as a guest, or sign in to an account you made on this computer.</li>
+      <li>Find the person. They might be in the room with you, on the online list, or on your buddy list.</li>
+      <li>Open their name. A private window appears with a box labeled for that person.</li>
+      <li>Write the message and press Send. They get a window too, unless they have ignored you.</li>
+    </ol>
+    <p>You cannot message yourself. The name has to match a real nickname: a letter first, then letters, numbers, or underscores, up to 16 characters. If nobody online has that name, the messenger says so. If the name belongs to an account that is signed out, it says they are offline instead of pretending the message was delivered.</p>
+    <p>LobbyBot is the exception. It is always "around" in the Welcome Lobby, and a private message to it gets a short reply. It is a greeter, not a mailbox you can dump a long note into.</p>
+
+    <h2>What the other person sees</h2>
+    <p>They see who it is from, the line you sent, and a window they can answer in. The rest of the room does not see it. People on their buddy list do not see it either. A private message has two ends, and both of those people have to be connected.</p>
+    <p>If they have ignored you, you are told you cannot message them right now. You do not get a fake "delivered." Their room lines also stop showing up for them once they ignore you, and the other way around when you ignore them. Unignore brings the channel back. Ignore is not announced as a public event.</p>
+
+    <h2>One window on a phone, three on a desk</h2>
+    <p>A phone has one private chat open at a time, in a sheet above the tab bar, so the keyboard and Send stay reachable. Opening a second person replaces the sheet you were looking at. The People tab is the full list: everyone online, and buddies if you have an account.</p>
+    <p>A wide window can keep up to three private chats open. Older ones minimize into the dock along the bottom when a fourth would have opened. You can minimize a window yourself, or close it. Closing it does not delete a history, because there is no history. It only puts the window away.</p>
+    <p>A new private message can play a short sound. The Sounds box in the header turns that off. The page title picks up a count when a minimized window has something you have not opened.</p>
+
+    <h2>Buddies, status, and why an account exists</h2>
+    <p>Guests can use the messenger with anyone who is online. They do not get a saved buddy list. When the guest session ends, there is nothing to reopen except the nickname this browser may fill in for next time.</p>
+    <p>An account exists for two small things: a buddy list, and a status, both stored on the computer that runs Y-Chat. Add someone by their exact nickname. Remove them when you no longer want them on that list. A buddy who is offline still appears there, and the messenger will tell you they are offline if you try to write them.</p>
+    <p>Status is Available, Away, or Busy, plus a status message of up to 60 characters. Other people see it next to your name. It is a signal, not a lock. Busy does not block incoming messages by itself. Ignore does.</p>
+    <p>The password for an account is not stored as the word you chose. Signing in a second time with the same account replaces the first connection, so you do not appear twice. None of that machinery stores the private messages or the room lines.</p>
+
+    <h2>Refresh, a dropped connection, and signing out</h2>
+    <p>Refresh the page and the text in every private window is cleared. The people you had open come back, in empty windows, and you are put back in the same room if you were in one. That is so a reload does not dump you on the welcome page in the middle of a conversation, and so the old lines do not linger.</p>
+    <p>If the connection drops and the page itself never reloads, the messenger keeps the lines already on screen and tries again for a short while. You will see a note that it is reconnecting. When it returns, the text is still there. This is the only case where a private chat survives a blip, and it survives only in that tab.</p>
+    <p>Sign out and the return is cancelled. The next open of the page is the welcome screen. Closing the tab does the same for a guest: the nickname comes free, and the private windows are gone.</p>
+
+    <h2>What this messenger is not</h2>
+    <p>It is not a phone messenger, and it does not send SMS. It does not keep an archive you can search next week. It does not run in the background after you close the tab. It is not affiliated with Yahoo, and it is not Yahoo Messenger. It is a private chat beside a set of public rooms, for as long as both people are here.</p>
+    <p>Advertising, if it is turned on later, is kept off this conversation. The welcome page and the room list are the only places an ad slot exists. The messenger window and the Send button stay clear.</p>
+    <p><a href="https://example.invalid/">Back to Y-Chat</a> · <a href="https://example.invalid/chat-rooms">Chat rooms</a> · <a href="https://example.invalid/terms">Terms</a> · <a href="https://example.invalid/privacy">Privacy</a></p>
+  </main>
+</body>
+</html>
