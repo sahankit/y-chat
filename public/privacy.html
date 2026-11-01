@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Privacy — Y-Chat</title>
-  <meta name="description" content="Y-Chat privacy: guest nicknames and optional buddy lists stay in your browser; chat is not stored on the server. Yahoo-style free chat — not affiliated with Yahoo." />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Privacy Policy — Y-Chat</title>
+  <meta name="description" content="Y-Chat Privacy Policy: 18+ open chat, what stays in your browser, live relay without message history, optional ads and analytics. Not affiliated with Yahoo." />
   <link rel="canonical" href="privacy.html" />
   <meta name="robots" content="index, follow" />
   <meta name="theme-color" content="#720e9e" />
@@ -30,14 +30,48 @@
     </nav>
   </header>
   <main class="doc">
-    <h1>Privacy</h1>
-    <p>Y-Chat is a chat you run yourself. It is not affiliated with Yahoo.</p>
-    <p>A guest nickname is saved in this browser so the sign-in box can be filled in next time. Room messages and private messages are not saved on the server. Refreshing the page clears the messages and returns you to the same room and private chats. A short disconnect keeps the messages in this tab only.</p>
-    <p>An optional account stores a buddy list and a status message on the computer that runs Y-Chat. The password is stored as a hash, not as plain text.</p>
-    <p>Advertising is not turned on. If it is added later, it will be Google AdSense. Those ads are labeled Advertisement, sit on the welcome page and the room list, and do not appear inside a conversation. AdSense uses cookies to show and measure ads. Ads do not load until you accept.</p>
-    <p>Google Analytics loads only after you accept, and only when a measurement ID is set. Google then receives the page address and ordinary browser details. Nicknames, room names, and messages are not sent. With no measurement ID, that tag is not loaded.</p>
-    <p>The first time you open Y-Chat in a browser, we ask you to accept the <a href="terms.html">Terms &amp; Conditions</a> and this policy. That choice stays in this browser so we do not ask again. Clearing site data brings the question back. If these pages change in a way that needs a new answer, we ask again.</p>
-    <p><a href="terms.html">Terms</a> · <a href="index.html">Back to Y-Chat</a></p>
+    <h1>Privacy Policy</h1>
+    <p class="updated">Last updated November 1, 2026.</p>
+    <p>This Privacy Policy describes how Y-Chat handles information when you use our browser-based chat rooms and messenger. Y-Chat is an independent project and is <strong>not affiliated with Yahoo</strong>. It works together with our <a href="terms.html">Terms &amp; Conditions</a>, including the <strong>18+ eligibility</strong> and <strong>open chat policy</strong>.</p>
+
+    <h2>Who this applies to</h2>
+    <p>Y-Chat is intended for users who are at least <strong>18 years old</strong> (or the age of majority where they live). We do not knowingly collect personal information from anyone under 18.</p>
+
+    <h2>Open chat and what others can see</h2>
+    <p>Public room messages are visible to everyone in that room while they are connected. Private messages are delivered to the person you choose while you are both online. Other users can see your nickname, status, and what you type in shared spaces. Treat open chat like a public conversation, not a private diary.</p>
+
+    <h2>What the relay stores</h2>
+    <p>The WebSocket relay keeps live session state (who is in which room, nicknames online, and messages in flight). It does <strong>not</strong> store a long-term chat history or transcript of room or private messages. When the relay restarts, custom rooms and live presence reset; built-in rooms return when the service comes back.</p>
+    <p>Operators of a deployment may log technical data (such as connection errors or abuse mitigation) depending on how they host the relay. The public deployment is designed to minimize server-side retention of message content.</p>
+
+    <h2>What stays in your browser</h2>
+    <ul>
+      <li><strong>Legal acceptance:</strong> A flag that you accepted the current Terms and this policy (version number), so we do not ask every visit.</li>
+      <li><strong>Guest nickname:</strong> Your last guest name may be saved to pre-fill the sign-in box.</li>
+      <li><strong>Optional account:</strong> If you register, username, password hash, buddy list, and status are stored locally on your device (not on the relay).</li>
+      <li><strong>Session restore:</strong> While the tab is open, the app may remember your room and open private windows so a refresh can return you to the same place (messages themselves are cleared on refresh).</li>
+    </ul>
+    <p>Clearing site data or using a different browser removes this local information.</p>
+
+    <h2>Passwords</h2>
+    <p>Optional account passwords are hashed before storage in your browser. We do not store your password in plain text on the relay server because accounts are local to your device.</p>
+
+    <h2>Advertising</h2>
+    <p>Advertising is off unless the operator enables it. If Google AdSense is used, ads are labeled “Advertisement,” appear in designated slots (not inside the live message stream), and may use cookies or similar technologies under Google’s policies. Ads do not load until you accept the Terms and this policy.</p>
+
+    <h2>Analytics</h2>
+    <p>Google Analytics loads only after you accept, and only when a measurement ID is configured. It may receive page URLs and standard browser or device information. It does <strong>not</strong> receive nicknames, room names, or message content from Y-Chat.</p>
+
+    <h2>Your choices</h2>
+    <p>You can refuse to accept and not use the service. You can clear cookies and site data in your browser to reset legal acceptance and local account data. You can use guest mode without creating an account.</p>
+
+    <h2>Changes</h2>
+    <p>We may update this policy. The “Last updated” date will change. If we need a new acceptance, the app will ask again before you can chat.</p>
+
+    <h2>Contact</h2>
+    <p>For privacy questions, contact the operator of the Y-Chat site you are using.</p>
+
+    <p><a href="terms.html">Terms &amp; Conditions</a> · <a href="index.html">Back to Y-Chat</a></p>
   </main>
 </body>
 </html>

@@ -2,7 +2,7 @@
 
 (() => {
 const LEGAL_KEY = "ychat-legal";
-const LEGAL_VERSION = "2";
+const LEGAL_VERSION = "3";
 
 function legalOk() {
   try {

@@ -72,8 +72,8 @@ async function main() {
   const privacyText = await privacy.text();
   const termsText = await terms.text();
   const map = await sitemap.text();
-  assert(privacyText.includes("Privacy") && privacyText.includes("/terms"), "privacy page incomplete");
-  assert(termsText.includes("Terms") && termsText.includes("/privacy"), "terms page incomplete");
+  assert(privacyText.includes("Privacy") && privacyText.includes("terms.html"), "privacy page incomplete");
+  assert(termsText.includes("Terms") && termsText.includes("18") && termsText.includes("privacy.html"), "terms page incomplete");
   assert(map.includes("/terms") && map.includes("/privacy"), "sitemap should list legal pages");
   assert(map.includes("/chat-rooms") && map.includes("/messenger"), "sitemap should list the guides");
   const roomsPage = await fetch(`${STATIC}/chat-rooms`);

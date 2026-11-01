@@ -27,6 +27,25 @@ const MAX_OPEN_IMS = 3;
 const LIVE_KEY = "ychat-live";
 
 let ychatConfig = { wsUrl: "", healthUrl: "" };
+let relayConfigLoaded = false;
+let configReady = Promise.resolve();
+
+function ensureRelayConfig() {
+  return configReady;
+}
+
+function relayWsConfigured() {
+  const raw = String(ychatConfig.wsUrl || "").trim();
+  if (raw) return true;
+  const h = location.hostname;
+  return h === "localhost" || h === "127.0.0.1";
+}
+
+function setGateFormsWaiting(on) {
+  for (const button of document.querySelectorAll("#gate-entry button[type=submit]")) {
+    button.disabled = on || $("gate-card").classList.contains("busy");
+  }
+}
 
 const state = {
   ws: null,
@@ -268,12 +287,17 @@ function setBusy(on) {
     }
     button.disabled = on;
   }
+  if (!on && relayConfigLoaded && legalAccepted()) setGateFormsWaiting(false);
 }
 
 function setIndexed(on) {
   const node = document.querySelector('meta[name="robots"]');
   if (!node) return;
   node.setAttribute("content", on ? "index, follow, max-image-preview:large" : "noindex");
+}
+
+function setChatUi(inChat) {
+  document.body.classList.toggle("in-chat", inChat);
 }
 
 function showGate(mode, message) {
@@ -293,6 +317,7 @@ function showGate(mode, message) {
   $("dock").replaceChildren();
   $("shell").hidden = true;
   $("gate").hidden = false;
+  setChatUi(false);
   setGateMode(mode || "guest");
   setGateError(message || "");
   setBusy(false);
@@ -313,7 +338,7 @@ function setGateMode(mode) {
 }
 
 const LEGAL_KEY = "ychat-legal";
-const LEGAL_VERSION = "2";
+const LEGAL_VERSION = "3";
 let legalThisVisit = false;
 
 function legalAccepted() {
@@ -333,13 +358,17 @@ function applyLegalGate() {
   if (pending) return;
   setupAds();
   if (window.startYchatAnalytics) window.startYchatAnalytics();
-  if (!state.me && !state.pendingPlace) {
-    const place = readPlace();
-    if (place) {
-      state.pendingPlace = place;
-      connect({ type: "resume", token: place.token });
-      return;
-    }
+  if (!relayConfigLoaded) setGateFormsWaiting(true);
+  else maybeAutoResume();
+}
+
+function maybeAutoResume() {
+  if (!legalAccepted() || state.me || state.pendingPlace) return;
+  const place = readPlace();
+  if (place) {
+    state.pendingPlace = place;
+    connect({ type: "resume", token: place.token });
+    return;
   }
   const field = document.querySelector("#gate-entry form:not([hidden]) input");
   if (field && !$("gate").hidden) field.focus();
@@ -360,9 +389,31 @@ function connect(payload, { resume = false } = {}) {
   if (!legalAccepted()) {
     applyLegalGate();
     setBusy(false);
-    setGateError("Accept the terms and privacy policy to come in.");
+    setGateError("Confirm you are 18+ and accept the Terms (including Open Chat Policy) and Privacy Policy to come in.");
     return;
   }
+  ensureRelayConfig().then(() => {
+    if (!relayWsConfigured()) {
+      setGateError("Chat relay URL is missing — check public/config.json (wsUrl and healthUrl).");
+      setBusy(false);
+      markRelayPill(false, "missing-config");
+      return;
+    }
+    openWebSocket(payload, { resume });
+  });
+}
+
+function gateConnectError(event, connError) {
+  const reason = String(event && event.reason ? event.reason : "").toLowerCase();
+  if (reason.includes("origin") || (event && event.code === 1008)) {
+    return "This website is not allowed to use the chat relay. The operator must add this site to ALLOWED_ORIGINS.";
+  }
+  if (event && event.code === 1013) return "The chat server is full. Try again in a minute.";
+  if (connError) return "Can't reach the chat server — check config.json wsUrl or your network.";
+  return "Disconnected before you got in.";
+}
+
+function openWebSocket(payload, { resume = false } = {}) {
   if (!resume) {
     setBusy(true);
     setGateError("");
@@ -386,14 +437,15 @@ function connect(payload, { resume = false } = {}) {
   ws.addEventListener("error", () => {
     if (state.ws === ws) state.connError = true;
   });
-  ws.addEventListener("close", () => {
+  ws.addEventListener("close", (event) => {
     if (state.ws !== ws) return;
     const manual = state.manualClose;
     state.manualClose = false;
     if (manual || state.leaving) return;
     if (!state.me || !state.auth) {
-      setGateError(state.connError ? "Can't reach the chat server." : "Disconnected before you got in.");
+      setGateError(gateConnectError(event, state.connError));
       setBusy(false);
+      markRelayPill(false, "ws-failed");
       return;
     }
     scheduleReconnect();
@@ -537,6 +589,7 @@ function applyHello(msg) {
   state.pendingPlace = null;
   $("gate").hidden = true;
   $("shell").hidden = false;
+  setChatUi(true);
   setIndexed(false);
   $("me-name").textContent = meLabel();
   $("status").value = msg.user.status || "available";
@@ -578,6 +631,7 @@ function resumeHello(msg) {
   syncLocalProfile();
   $("gate").hidden = true;
   $("shell").hidden = false;
+  setChatUi(true);
   setIndexed(false);
   $("me-name").textContent = meLabel();
   setBusy(false);
@@ -1508,27 +1562,82 @@ if (localStorage.getItem("ychat-sound") === "0") {
   $("sound").checked = false;
 }
 
-function pingRelay() {
+function markRelayPill(ok, mode) {
   const pill = $("server-pill");
+  if (!pill) return;
+  pill.classList.toggle("ok", ok);
+  pill.classList.toggle("bad", !ok);
+  if (ok) {
+    pill.textContent = "Chat relay is reachable";
+    return;
+  }
+  const loopback = location.hostname === "localhost" || location.hostname === "127.0.0.1";
+  if (mode === "missing-config") {
+    pill.textContent = loopback
+      ? "Chat relay is not configured — run npm start or set config.json"
+      : "Chat relay URL missing in config.json";
+    return;
+  }
+  if (mode === "ws-failed") {
+    pill.textContent = "Relay health OK but chat connection failed";
+    return;
+  }
+  pill.textContent = loopback
+    ? "Chat relay is not running — run npm start in the project folder"
+    : "Chat relay is not reachable — set wsUrl in config.json";
+}
+
+function probeRelaySocket(timeoutMs = 6000) {
+  return new Promise((resolve) => {
+    if (!relayWsConfigured()) {
+      resolve(false);
+      return;
+    }
+    let done = false;
+    const finish = (ok) => {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      try { ws.close(); } catch { /* ignore */ }
+      resolve(ok);
+    };
+    let ws;
+    try {
+      ws = new WebSocket(wsUrl());
+    } catch {
+      finish(false);
+      return;
+    }
+    const timer = setTimeout(() => finish(false), timeoutMs);
+    ws.addEventListener("open", () => finish(true));
+    ws.addEventListener("error", () => finish(false));
+  });
+}
+
+function pingRelay() {
+  if (!relayWsConfigured()) {
+    markRelayPill(false, "missing-config");
+    return Promise.resolve(false);
+  }
   const url = healthUrl();
-  fetch(url)
+  return fetch(url)
     .then((res) => {
       if (!res.ok) throw new Error("down");
-      pill.textContent = "Chat relay is reachable";
-      pill.classList.remove("bad");
-      pill.classList.add("ok");
+      return probeRelaySocket();
+    })
+    .then((socketOk) => {
+      markRelayPill(socketOk, socketOk ? "ok" : "ws-failed");
+      return socketOk;
     })
     .catch(() => {
-      pill.classList.remove("ok");
-      pill.classList.add("bad");
-      const loopback = location.hostname === "localhost" || location.hostname === "127.0.0.1";
-      pill.textContent = loopback
-        ? "Chat relay is not running — run npm start in the project folder"
-        : "Chat relay is not reachable — set wsUrl in config.json";
+      markRelayPill(false, "health-failed");
+      return false;
     });
 }
 
-fetch(new URL("config.json", location.href).href)
+setGateFormsWaiting(true);
+
+configReady = fetch(new URL("config.json", location.href).href)
   .then((res) => (res.ok ? res.json() : null))
   .then((cfg) => {
     if (cfg && typeof cfg === "object") ychatConfig = { ...ychatConfig, ...cfg };
@@ -1537,6 +1646,14 @@ fetch(new URL("config.json", location.href).href)
   .catch(() => {
     normalizeRelayConfig();
   })
-  .finally(() => pingRelay());
+  .finally(() => {
+    relayConfigLoaded = true;
+    return pingRelay().finally(() => {
+      if (legalAccepted()) {
+        setGateFormsWaiting(false);
+        maybeAutoResume();
+      }
+    });
+  });
 
 applyLegalGate();

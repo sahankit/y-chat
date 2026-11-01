@@ -22,4 +22,29 @@
       ld.textContent = JSON.stringify(data);
     } catch { /* ignore */ }
   }
+
+  const nav = document.querySelector(".site-nav");
+  if (nav && !nav.querySelector(".site-nav-toggle")) {
+    const menu = nav.querySelector(".site-nav-links");
+    if (menu) {
+      menu.id = "site-nav-menu";
+      const toggle = document.createElement("button");
+      toggle.type = "button";
+      toggle.className = "site-nav-toggle";
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.setAttribute("aria-controls", "site-nav-menu");
+      toggle.textContent = "Menu";
+      nav.insertBefore(toggle, menu);
+      toggle.addEventListener("click", () => {
+        const open = nav.classList.toggle("site-nav-open");
+        toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+      menu.querySelectorAll("a").forEach((link) => {
+        link.addEventListener("click", () => {
+          nav.classList.remove("site-nav-open");
+          toggle.setAttribute("aria-expanded", "false");
+        });
+      });
+    }
+  }
 })();

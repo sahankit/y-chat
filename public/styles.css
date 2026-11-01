@@ -36,7 +36,9 @@ body {
 }
 
 button, input, select { font: inherit; color: inherit; }
-button { cursor: pointer; }
+button { cursor: pointer; touch-action: manipulation; }
+
+input, select, textarea { font-size: 16px; }
 
 button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible {
   outline: 2px solid var(--yahoo-yellow);
@@ -146,24 +148,108 @@ body.has-site-nav #shell {
   height: calc(100dvh - 56px);
 }
 
+body.in-chat {
+  overflow: hidden;
+}
+
+@media (max-width: 860px) {
+  body.in-chat .site-top { display: none; }
+  body.in-chat #shell {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    width: 100%;
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    border-radius: 0;
+    border-left: 0;
+    border-right: 0;
+    padding:
+      max(6px, env(safe-area-inset-top))
+      max(6px, env(safe-area-inset-right))
+      max(2px, env(safe-area-inset-bottom))
+      max(6px, env(safe-area-inset-left));
+  }
+}
+
+.site-nav-toggle {
+  display: none;
+  margin-left: auto;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+  font-weight: 800;
+  border-radius: 6px;
+  min-height: 44px;
+  min-width: 72px;
+  padding: 8px 14px;
+}
+
+.site-nav-toggle:hover {
+  background: var(--yahoo-yellow);
+  color: var(--yahoo-purple-dark);
+  border-color: var(--yahoo-yellow-deep);
+}
+
+@media (max-width: 720px) {
+  .site-nav-toggle { display: inline-flex; align-items: center; justify-content: center; }
+  .site-nav-brand { margin-right: 0; }
+  .site-nav-links {
+    display: none;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 2px;
+    padding-top: 4px;
+  }
+  .site-nav-open .site-nav-links { display: flex; }
+  .site-nav-links a {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    border-radius: 6px;
+  }
+  .site-nav-links li { width: 100%; }
+}
+
 @media (max-width: 560px) {
   .site-nav {
-    padding: 6px 10px;
+    padding: max(6px, env(safe-area-inset-top)) 10px 6px;
   }
   .site-nav-brand {
     font-size: 16px;
-    width: 100%;
-    margin-right: 0;
-    padding-bottom: 2px;
-  }
-  .site-nav-links {
-    width: 100%;
-    justify-content: flex-start;
   }
   .site-nav-links a {
-    font-size: 13px;
-    padding: 7px 9px;
+    font-size: 15px;
+    padding: 10px 12px;
   }
+  .gate-card {
+    padding: 0 16px 18px;
+  }
+  .gate-head {
+    margin: 0 -16px 14px;
+    padding: 14px 16px 12px;
+  }
+  .brand.big .word { font-size: 28px; }
+  .discover {
+    margin: 20px 0  max(20px, env(safe-area-inset-bottom));
+    padding: 0 4px;
+  }
+  .discover h2 { font-size: 20px; }
+  .discover-nav a {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 12px;
+  }
+  .doc {
+    width: min(640px, calc(100% - 20px));
+    margin: 16px auto max(24px, env(safe-area-inset-bottom));
+    padding: 20px 16px;
+  }
+  .doc h1 { font-size: 26px; }
 }
 
 [hidden] { display: none !important; }
@@ -477,6 +563,39 @@ form input:focus, .composer input:focus, .im-input:focus, #add-buddy input:focus
 
 html:not(.legal-ok) #gate-entry { display: none; }
 html.legal-ok #legal-gate { display: none; }
+
+.legal-summary {
+  margin: 0 0 14px;
+  padding: 12px 14px;
+  border-radius: 6px;
+  background: var(--peach);
+  border: 1px solid #dcc9ea;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.legal-summary-title {
+  margin: 0 0 8px;
+  font-weight: 800;
+  color: var(--yahoo-purple-dark);
+  font-size: 15px;
+}
+
+.legal-summary p { margin: 0 0 8px; }
+.legal-summary a { color: var(--yahoo-purple-dark); font-weight: 800; }
+
+.legal-points {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.legal-points li { margin: 0 0 6px; }
+
+#legal-gate .agree a {
+  color: var(--yahoo-purple);
+  font-weight: 800;
+}
 
 .agree {
   display: flex;
@@ -1183,7 +1302,6 @@ form .agree input {
 @media (max-width: 860px) {
   .sky { display: none; }
   .place, .me input, .sound, .top .word { display: none; }
-  input, select, textarea { font-size: 16px; }
 
   #shell {
     padding: 8px;
@@ -1192,15 +1310,56 @@ form .agree input {
     grid-template-rows: auto minmax(0, 1fr) auto;
   }
 
-  .top { flex-wrap: nowrap; padding: 8px 10px; gap: 8px; }
+  .top { flex-wrap: nowrap; padding: 8px 10px; gap: 8px; min-height: 48px; }
+  .top .brand { min-height: 44px; min-width: 44px; }
+  .top .ghost { min-height: 44px; padding: 8px 12px; }
   .me { flex-wrap: nowrap; gap: 6px; }
   .me-name {
-    max-width: 34vw;
+    max-width: 38vw;
     overflow: hidden;
     text-overflow: ellipsis;
-    padding: 6px 8px;
+    padding: 8px 10px;
+    font-size: 15px;
   }
-  .me select { max-width: 108px; padding: 7px 8px; }
+  .me select { max-width: 112px; padding: 8px 10px; min-height: 44px; }
+
+  .room, .person, .roster-row, .cat {
+    min-height: 44px;
+  }
+
+  .emotes button {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+  }
+
+  .composer {
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+  }
+
+  .iconbtn {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+  }
+
+  form .agree {
+    min-height: 44px;
+    align-items: center;
+    gap: 12px;
+  }
+  form .agree input {
+    width: 22px;
+    height: 22px;
+    margin: 0;
+  }
+
+  .reconnect {
+    left: 12px;
+    right: 12px;
+    bottom: calc(72px + env(safe-area-inset-bottom));
+    text-align: center;
+  }
 
   .body { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
   #shell[data-pane="rooms"] .body { grid-template-rows: auto minmax(0, 1fr); }
@@ -1274,19 +1433,22 @@ form .agree input {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 4px;
-    padding: 4px;
-    background: rgba(255, 250, 246, 0.94);
-    border: 1px solid rgba(255, 255, 255, 0.8);
-    border-radius: 18px;
-    box-shadow: var(--shadow);
+    padding: 6px 4px max(6px, env(safe-area-inset-bottom));
+    background: rgba(255, 250, 246, 0.98);
+    border: 1px solid var(--line);
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
   }
   .mobile-nav button {
     border: 0;
     background: transparent;
     color: var(--muted);
-    border-radius: 14px;
-    min-height: 46px;
+    border-radius: 10px;
+    min-height: 48px;
     font-weight: 800;
+    font-size: 15px;
+    -webkit-tap-highlight-color: transparent;
   }
   .mobile-nav button.on { background: var(--yahoo-purple); color: #fff; }
 

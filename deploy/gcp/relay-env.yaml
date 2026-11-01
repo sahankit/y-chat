@@ -1,1 +1,1 @@
-ALLOWED_ORIGINS: "https://sahankit.github.io,https://chatkaro-1754733802.web.app,https://chatkaro-1754733802.firebaseapp.com,https://storage.googleapis.com"
+ALLOWED_ORIGINS: "https://sahankit.github.io,https://chatkaro-1754733802.web.app,https://chatkaro-1754733802.firebaseapp.com,https://storage.googleapis.com,http://127.0.0.1:4318,http://localhost:4318,http://127.0.0.1:4317,http://localhost:4317"
