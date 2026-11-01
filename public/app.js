@@ -356,6 +356,7 @@ function applyLegalGate() {
   $("legal-gate").hidden = !pending;
   $("gate-entry").hidden = pending;
   if (pending) return;
+  if (window.startYchatAds) window.startYchatAds();
   setupAds();
   if (window.startYchatAnalytics) window.startYchatAnalytics();
   if (!relayConfigLoaded) setGateFormsWaiting(true);
@@ -716,6 +717,10 @@ function adSlotId(name) {
 }
 
 function ensureAdsScript(client) {
+  const existing = document.querySelector(
+    `script[src*="adsbygoogle.js"][src*="${encodeURIComponent(client)}"]`,
+  );
+  if (existing) return Promise.resolve();
   if (adsScript) return adsScript;
   adsScript = new Promise((resolve, reject) => {
     const script = document.createElement("script");

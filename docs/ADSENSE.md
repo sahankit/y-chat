@@ -64,7 +64,17 @@ AdSense may offer one of:
 
 After you edit `ads.json`, deploy (push to `main`), then click **Verify** in AdSense.
 
-## 3. Create display ad units
+## 3. Auto ads (AdSense dashboard “Get code”)
+
+In AdSense → **Ads** → **Auto ads** → turn **On** → **Apply to site**.
+
+The dashboard shows a `<script async src="…adsbygoogle.js?client=ca-pub-…">` snippet. **Do not paste that into raw HTML** on Y-Chat: ads must load only after the 18+ Terms accept (Privacy Policy).
+
+This repo already injects the **same script** via **`ads-loader.js`** when the user has accepted Terms (or on return visits with consent saved). Your publisher ID lives in **`public/ads.json`** (`ca-pub-5596933121293455`).
+
+After deploy, accept Terms on https://sahankit.github.io/y-chat/ and wait up to an hour for Auto ads to appear. Optional **manual** units below add labeled slots in addition to Auto ads.
+
+## 4. Manual display ad units (optional)
 
 In AdSense → **Ads** → **By ad unit** → **Display ads**, create **two** responsive units:
 
@@ -89,7 +99,7 @@ Use **`public/ads.example.json`** as a template. The `ca-pub-…` ID is public (
 
 Commit and push. GitHub Pages redeploys in a few minutes.
 
-## 4. ads.txt (required for revenue)
+## 5. ads.txt (required for revenue)
 
 AdSense → **Account** → **ads.txt** shows the exact line for your publisher ID.
 
@@ -110,7 +120,7 @@ Confirm **both** if you use a project site:
 - https://sahankit.github.io/ads.txt (user site repo)
 - https://sahankit.github.io/y-chat/ads.txt (this repo’s `public/ads.txt`)
 
-## 5. Test after approval
+## 6. Test after approval
 
 1. Open https://sahankit.github.io/y-chat/ in a **private/incognito** window (or clear site data).
 2. Accept the 18+ Terms checkbox.
@@ -119,7 +129,7 @@ Confirm **both** if you use a project site:
 
 Ads do **not** load until Terms are accepted (`app.js` → `setupAds()` after legal gate).
 
-## 6. Policy checklist (ongoing)
+## 7. Policy checklist (ongoing)
 
 - Keep **Terms**, **Privacy**, and guide pages linked from the nav.  
 - Do not place ad code inside room chat, IM windows, or message lists (already enforced in code).  
