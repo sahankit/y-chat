@@ -62,7 +62,7 @@ Property must stay **URL prefix** `https://sahankit.github.io/y-chat/`, not Doma
 |------|-----|
 | GitHub repo **About** + **Topics** | `chat`, `websocket`, `github-pages` — helps GitHub discovery |
 | Analytics (GA) after consent | `public/analytics.json` + measurement ID — tracks landing, not room text |
-| AdSense | Separate approval; see terms / 18+ gate |
+| AdSense | **[docs/ADSENSE.md](./ADSENSE.md)** — `ads.json`, `ads.txt`, after 18+ accept |
 | Custom domain | Update `sitemap.xml`, `robots.txt`, Cloud Run `ALLOWED_ORIGINS` — [CUSTOM-DOMAIN.md](./CUSTOM-DOMAIN.md) |
 
 ## Repo files

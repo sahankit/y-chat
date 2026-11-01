@@ -13,6 +13,8 @@ After you push to `main`, enable **Settings → Pages → Build and deployment �
 
 **SEO (no custom domain):** `public/sitemap.xml` and `public/robots.txt` target this GitHub Pages URL. Submit the sitemap in [Google Search Console](https://search.google.com/search-console) — see **[docs/GITHUB-PAGES-SEO.md](docs/GITHUB-PAGES-SEO.md)**.
 
+**AdSense (optional):** ads load only after the 18+ Terms gate. Configure `public/ads.json` and `public/ads.txt` — see **[docs/ADSENSE.md](docs/ADSENSE.md)**.
+
 ## Requirements
 
 - Node.js 18+
