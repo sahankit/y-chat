@@ -519,6 +519,18 @@ form input:focus, .composer input:focus, .im-input:focus, #add-buddy input:focus
 .fine { margin: 16px 0 0; }
 .fine a { color: var(--violet); font-weight: 800; }
 
+.noscript-seo {
+  max-width: 42rem;
+  margin: 0.75rem auto 0;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  text-align: center;
+  background: #fff8e7;
+  border: 1px solid #c4a574;
+  border-radius: 8px;
+}
+
 .discover {
   width: min(720px, 100%);
   margin: 28px 0 24px;

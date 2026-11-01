@@ -28,3 +28,20 @@ jobs:
           path: public
       - id: deployment
         uses: actions/deploy-pages@v4
+      - name: Notify search engines (IndexNow)
+        if: success()
+        run: |
+          curl -fsS -X POST 'https://api.indexnow.org/indexnow' \
+            -H 'Content-Type: application/json; charset=utf-8' \
+            -d '{
+              "host": "sahankit.github.io",
+              "key": "ychatindexnow2026feb9a7b3c4d5e6f708192",
+              "keyLocation": "https://sahankit.github.io/y-chat/ychatindexnow2026feb9a7b3c4d5e6f708192.txt",
+              "urlList": [
+                "https://sahankit.github.io/y-chat/index.html",
+                "https://sahankit.github.io/y-chat/chat-rooms.html",
+                "https://sahankit.github.io/y-chat/messenger.html",
+                "https://sahankit.github.io/y-chat/terms.html",
+                "https://sahankit.github.io/y-chat/privacy.html"
+              ]
+            }' || true

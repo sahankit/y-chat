@@ -73,8 +73,30 @@ Property must stay **URL prefix** `https://sahankit.github.io/y-chat/`, not Doma
 | `public/robots.txt` | Crawler + sitemap pointer |
 | `public/site-meta.js` | Absolute canonical, OG, JSON-LD |
 | `public/google34da527c15058477.html` | Search Console verification |
+| `public/.nojekyll` | Skip Jekyll on GitHub Pages |
+| `public/ychatindexnow*.txt` | [IndexNow](https://www.indexnow.org/) key (Bing, Yandex, etc.) |
+| Deploy workflow | Pings IndexNow after each Pages deploy |
 
-If you fork to another Pages path, update **sitemap.xml** and **robots.txt** to match your base URL.
+### IndexNow (automatic)
+
+Each push to `main` posts your five public URLs to IndexNow (helps **Bing** crawl sooner). Google still relies on Search Console + sitemap.
+
+### Absolute canonical / OG URLs
+
+HTML `canonical`, `og:url`, and share images use the full `https://sahankit.github.io/y-chat/…` URLs so crawlers do not depend on JavaScript. If you change the Pages path, update those tags in the five HTML files to match **sitemap.xml**.
+
+If you fork to another Pages path, update **sitemap.xml**, **robots.txt**, canonical/OG tags, and the IndexNow key URL in **pages.yml** to match your base URL.
+
+## Off-site (you do this — biggest lever while `site:` is empty)
+
+| Action | Why |
+|--------|-----|
+| GitHub repo **About** → link `https://sahankit.github.io/y-chat/` | Google trusts github.io; gives a direct link to your path |
+| GitHub **Topics** on the repo | `chat`, `websocket`, `github-pages`, `yahoo` |
+| Profile README or pin the repo | One more crawl path |
+| GSC **Request indexing** on home + guides | Still required for Google |
+
+No amount of on-page SEO replaces **verify in GSC + sitemap + request indexing** and a few days’ wait.
 
 ## Sharing
 
